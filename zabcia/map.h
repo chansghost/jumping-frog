@@ -1,8 +1,7 @@
 #pragma once
-#include <stdbool.h>
-#include "defines.h"
+#include "includes.h"
 
-
+void map_tests(char** map);
 void print_stats(int level, int points);
 
 void print_map(char** map);
