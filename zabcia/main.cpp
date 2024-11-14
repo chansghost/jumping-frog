@@ -1,17 +1,24 @@
 #include "map.h"
 #include "cars.h"
 #include "includes.h"
+#include <windows.h>
 
 
 
-// initscr();              // Startuje tryb ncurses
-// cputs("Hello, ncurses!"); // Wyœwietla tekst
-// refresh();              // Odœwie¿a ekran
-// getch();                // Czeka na naciœniêcie klawisza
-// endwin();               // Koñczy tryb ncurses
-// return 0;
-
-//cars need to be 4 fields tall, 3 fields wide
+void gameplay(char**map,Car**cars,int max_cars) {
+    int car_index;
+    car_index = rand() % (max_cars - 1) + 1;
+    move_car(map, cars[2]);
+    print_map(map);
+ 
+}
+void start_game(char**map,Car**cars,int street_numbers[], int max_friend, int max_enemy, int min, int level, int points) {
+    print_stats(level, points);
+    base_map(map, street_numbers);
+    print_map(map);
+    generate_all_cars(cars, map, max_friend, max_enemy, min, street_numbers);
+    print_map(map);
+}
 
 
 int main() {
@@ -26,31 +33,27 @@ int main() {
     //robocze
 
     int street_numbers[STREETS];//0 & even numbers move down, odd numbers move up
+
     Car** cars = (Car**)malloc(max_cars * sizeof(Car*));
     for (int i = 0; i < max_cars; i++) {
         cars[i] = (Car*)malloc(sizeof(Car));
-        initialize_car(cars[i]);
+        reset_car(cars[i],NEW);
     }
-    //struct Car*enemy_cars= malloc(max_enemy*sizeof(Car*));
      char**map=(char**)malloc(MAP_HEIGHT *sizeof(char*));
      for (int i = 0; i < MAP_HEIGHT; i++) {
          map[i] = (char*)malloc((MAP_WIDTH * sizeof(char)));
 
      }
-     
-    print_stats(level,points);
-    base_map(map, street_numbers);
-    //map_tests(map);
-    print_map(map);
-    generate_all_cars(cars,map,max_friend,max_enemy,min,street_numbers);
-
+     start_game(map, cars, street_numbers, max_friend, max_enemy, min, level, points);
     int ch;
 
     while ((ch = getch()) != 'q') {
+        
         switch (ch) {
-        case 'a':
-            print_map(map);
-            break;
+            case 'a':
+                //czekamy na ten przycisk
+                gameplay(map, cars, max_cars);
+                break;
 
         }
     }

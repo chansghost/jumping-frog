@@ -81,3 +81,4 @@ void update_map(char** map, int x, int y, char symbol) {
     map[y][x] = symbol;
 
 }
+

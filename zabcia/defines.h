@@ -5,4 +5,7 @@
 #define SIDEWALK 1
 #define STREETS (MAP_WIDTH/8)
 #define CAR_SIZE 3
+#define ADD false
+#define REMOVE true
+#define NEW false
 
