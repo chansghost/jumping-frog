@@ -6,11 +6,11 @@ void print_stats(int level, int points) {
 
     cputs("GAME STATS");
     cputs("\n");
-    printf("%d",level);
+    printf("%d", level);
     cputs("        ");
     putch(points);
     cputs("\n");
-    
+
 }
 
 void print_map(char** map) {
@@ -20,17 +20,17 @@ void print_map(char** map) {
     for (int i = 0; i < MAP_HEIGHT; i++) { //y
         for (int j = 0; j < MAP_WIDTH; j++) {//x
             if (map[i][j] == 'F') {
-               textcolor(LIGHTBLUE);
-               textbackground(LIGHTBLUE);
+                textcolor(LIGHTBLUE);
+                textbackground(LIGHTBLUE);
             }
             else if (map[i][j] == 'E') {
-               textcolor(RED);
-               textbackground(RED);
+                textcolor(RED);
+                textbackground(RED);
             }
             putch(map[i][j]);
             textcolor(WHITE);
             textbackground(BLACK);
-            
+
         }
         cputs("\n"); //new line
     }

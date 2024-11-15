@@ -5,19 +5,20 @@
 
 
 
-void gameplay(char**map,Car**cars,int max_cars) {
-    int car_index;
-    car_index = rand() % (max_cars - 1) + 1;
-    move_car(map, cars[2]);
+void gameplay(char** map, Car** cars, int max_cars) {
+    for (int i = 0; i < max_cars; i++) {
+        move_car(map, cars, i, max_cars);
+    }
     print_map(map);
- 
+
 }
-void start_game(char**map,Car**cars,int street_numbers[], int max_friend, int max_enemy, int min, int level, int points) {
-    print_stats(level, points);
+void start_game(char** map, Car** cars, int street_numbers[], int max_friend, int max_enemy, int min, int level, int points, int max_speed) {
+    // print_stats(level, points);
     base_map(map, street_numbers);
     print_map(map);
-    generate_all_cars(cars, map, max_friend, max_enemy, min, street_numbers);
+    generate_all_cars(cars, map, max_friend, max_enemy, min, street_numbers, max_speed);
     print_map(map);
+    // clrscr();
 }
 
 
@@ -30,6 +31,7 @@ int main() {
     int max_enemy = 20;
     int max_cars = max_friend + max_enemy;
     int min = 3;
+    int max_speed = 3;
     //robocze
 
     int street_numbers[STREETS];//0 & even numbers move down, odd numbers move up
@@ -37,23 +39,24 @@ int main() {
     Car** cars = (Car**)malloc(max_cars * sizeof(Car*));
     for (int i = 0; i < max_cars; i++) {
         cars[i] = (Car*)malloc(sizeof(Car));
-        reset_car(cars[i],NEW);
+        reset_car(cars[i], NEW);
     }
-     char**map=(char**)malloc(MAP_HEIGHT *sizeof(char*));
-     for (int i = 0; i < MAP_HEIGHT; i++) {
-         map[i] = (char*)malloc((MAP_WIDTH * sizeof(char)));
+    char** map = (char**)malloc(MAP_HEIGHT * sizeof(char*));
+    for (int i = 0; i < MAP_HEIGHT; i++) {
+        map[i] = (char*)malloc((MAP_WIDTH * sizeof(char)));
 
-     }
-     start_game(map, cars, street_numbers, max_friend, max_enemy, min, level, points);
+    }
+    start_game(map, cars, street_numbers, max_friend, max_enemy, min, level, points, max_speed);
     int ch;
 
     while ((ch = getch()) != 'q') {
-        
+
         switch (ch) {
-            case 'a':
-                //czekamy na ten przycisk
-                gameplay(map, cars, max_cars);
-                break;
+        case 'a':
+            //czekamy na ten przycisk
+            gameplay(map, cars, max_cars);
+            printf("Here is a frog emoji: ??\n");
+            break;
 
         }
     }
