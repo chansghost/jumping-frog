@@ -1,7 +1,7 @@
 #include "map.h"
 #include "cars.h"
 #include "frog.h"
-//s#include "gameplayy.h"
+#include "gameplayy.h"
 #include "includes.h"
 
 
@@ -13,18 +13,24 @@ void gameplay(char** map,char**basemap,char**pastmap, Car** cars, int max_cars, 
         for (int i = 0; i < max_cars; i++) {
             move_car(map, cars, i, max_cars,frog);
         }
-        print_map(map, pastmap, basemap);
+        
         if (kbhit()) {
             key = getch();
             switch (key) {
                 case 'd':
-                    jump(map, frog, RIGHT);
-                    print_map(map, pastmap, basemap);
+                    jump(map, frog, RIGHT,cars,max_cars);
+                    //print_map(map, pastmap, basemap);
                     break;
                 case 'q':
                     quit = true;
                     break;
             }
+        }
+
+        print_map(map, pastmap, basemap);
+        if (frog->dead) {
+            quit = true;
+            cputs("GAME OVERRRRRRRRR");
         }
         
     }

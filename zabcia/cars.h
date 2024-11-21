@@ -23,8 +23,6 @@ void generate_car(Car* car, char** map, bool friendly, int streets[], int max_sp
 
 bool car_bounds(char** map, int x, int y);
 
-void move_car(char** map, Car** cars, int index, int max_cars,Frog*frog);
-
 int return_car(int x, int y, Car** cars,int max_cars);
 
 bool check_for_cars(char** map, Car** cars, int max_cars, int index);
