@@ -8,4 +8,8 @@
 #define ADD false
 #define REMOVE true
 #define NEW false
+#define RIGHT 1
+#define UP 2
+#define LEFT 3
+#define DOWN 4
 

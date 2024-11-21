@@ -62,7 +62,7 @@ void move_car(char** map, Car** cars, int index, int max_cars) {
                 newy -= car->speed;
                 car->y = newy;
             }
-            if (within_bounds(map, car->x, car->y)) {
+            if (car_bounds(map, car->x, car->y)) {
                 render_car(map, car, ADD);
             }
             else {
@@ -93,7 +93,7 @@ void render_car(char** map, Car* car, bool clear) {
     }
 }
 
-bool within_bounds(char** map, int x, int y) {
+bool car_bounds(char** map, int x, int y) {
     for (int i = 0; i < CAR_SIZE; i++) {
         if ((x + i) >= MAP_WIDTH || (x - i) < 0) {
             return false;
@@ -114,7 +114,7 @@ void generate_random_car_position(Car* car, char** map, int streets[]) {
         x_pos = streets[street_number];
         y_pos = rand() % 37;//hardcoded because it doesn't work with a variable name for some reason?
 
-        if (within_bounds(map, x_pos, y_pos)) {
+        if (car_bounds(map, x_pos, y_pos)) {
             if (map[y_pos - 1][x_pos] == ' ' && map[y_pos + 1][x_pos] == ' ' && map[y_pos][x_pos] == ' ') {//if there is no car already 
                 if (map[y_pos - 2][x_pos] == ' ' && map[y_pos + 2][x_pos] == ' ') {
                     empty = true;

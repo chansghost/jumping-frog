@@ -1,15 +1,26 @@
 #include "map.h"
 #include "cars.h"
+#include "frog.h"
 #include "includes.h"
-#include <windows.h>
 
 
 
-void gameplay(char** map, Car** cars, int max_cars) {
-    for (int i = 0; i < max_cars; i++) {
-        move_car(map, cars, i, max_cars);
+void gameplay(char** map, Car** cars, int max_cars, Frog*frog) {
+    int ch;
+    while ((ch = getch()) != 'q') {
+        for (int i = 0; i < max_cars; i++) {
+            move_car(map, cars, i, max_cars);
+        }
+        print_map(map);
+        switch (ch) {
+        case 'd':
+            jump(map, frog, RIGHT);
+            print_map(map);
+            break;
+
+        }
     }
-    print_map(map);
+    
 
 }
 void start_game(char** map, Car** cars, int street_numbers[], int max_friend, int max_enemy, int min, int level, int points, int max_speed) {
@@ -36,6 +47,8 @@ int main() {
 
     int street_numbers[STREETS];//0 & even numbers move down, odd numbers move up
 
+    
+
     Car** cars = (Car**)malloc(max_cars * sizeof(Car*));
     for (int i = 0; i < max_cars; i++) {
         cars[i] = (Car*)malloc(sizeof(Car));
@@ -49,13 +62,19 @@ int main() {
     start_game(map, cars, street_numbers, max_friend, max_enemy, min, level, points, max_speed);
     int ch;
 
+    Frog* frog = (Frog*)malloc(sizeof(Frog));
+    initialize_frog(map, frog);
+
+    gameplay(map, cars, max_cars,frog);
+
+
     while ((ch = getch()) != 'q') {
 
         switch (ch) {
         case 'a':
             //czekamy na ten przycisk
-            gameplay(map, cars, max_cars);
-            printf("Here is a frog emoji: ??\n");
+            
+
             break;
 
         }
