@@ -1,24 +1,32 @@
 #include "map.h"
 #include "cars.h"
 #include "frog.h"
+//s#include "gameplayy.h"
 #include "includes.h"
 
 
 
 void gameplay(char** map,char**basemap,char**pastmap, Car** cars, int max_cars, Frog*frog) {
-    int ch;
-    while ((ch = getch()) != 'q') {
+    int key;
+    bool quit = false;
+    while (!quit) {//koniec lvl pozniej tu trzeba wsadzic
         for (int i = 0; i < max_cars; i++) {
-            move_car(map, cars, i, max_cars);
+            move_car(map, cars, i, max_cars,frog);
         }
         print_map(map, pastmap, basemap);
-        switch (ch) {
-        case 'd':
-            jump(map, frog, RIGHT);
-            print_map(map,pastmap,basemap);
-            break;
-
+        if (kbhit()) {
+            key = getch();
+            switch (key) {
+                case 'd':
+                    jump(map, frog, RIGHT);
+                    print_map(map, pastmap, basemap);
+                    break;
+                case 'q':
+                    quit = true;
+                    break;
+            }
         }
+        
     }
     
 
@@ -48,21 +56,21 @@ int main() {
     int street_numbers[STREETS];//0 & even numbers move down, odd numbers move up
 
     
-
+    
+    
     Car** cars = (Car**)malloc(max_cars * sizeof(Car*));
     for (int i = 0; i < max_cars; i++) {
         cars[i] = (Car*)malloc(sizeof(Car));
         reset_car(cars[i], NEW);
     }
-    char** map = (char**)malloc(MAP_HEIGHT * sizeof(char*));
-    for (int i = 0; i < MAP_HEIGHT; i++) {
-        map[i] = (char*)malloc((MAP_WIDTH * sizeof(char)));
-
-    }
-
     char** basemap = (char**)malloc(MAP_HEIGHT * sizeof(char*));
     for (int i = 0; i < MAP_HEIGHT; i++) {
         basemap[i] = (char*)malloc((MAP_WIDTH * sizeof(char)));
+
+    }
+    char** map = (char**)malloc(MAP_HEIGHT * sizeof(char*));
+    for (int i = 0; i < MAP_HEIGHT; i++) {
+        map[i] = (char*)malloc((MAP_WIDTH * sizeof(char)));
 
     }
     char** pastmap = (char**)malloc(MAP_HEIGHT * sizeof(char*));
@@ -70,6 +78,7 @@ int main() {
         pastmap[i] = (char*)malloc((MAP_WIDTH * sizeof(char)));
 
     }
+    //allocate(&map, &pastmap, max_cars);
 
     start_game(map,basemap,pastmap, cars, street_numbers, max_friend, max_enemy, min, level, points, max_speed);
     int ch;
@@ -92,10 +101,7 @@ int main() {
         }
     }
 
-    for (int i = 0; i < MAP_HEIGHT; i++) {
-        free(map[i]);
-    }
-    free(map);
+    free_memory(map, pastmap, max_cars);
     for (int i = 0; i < max_cars; i++) {
         free(cars[i]);
     }

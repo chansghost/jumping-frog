@@ -9,7 +9,7 @@ void print_stats(int level, int points) {
     printf("%d", level);
     cputs("        ");
     putch(points);
-    printf("%c", '??');
+    printf("%c", 'B');
     cputs("\n");
 
 }
@@ -35,6 +35,10 @@ void print_map(char** map,char**pastmap,char**basemap) {
             else if (map[i][j] == 'E') {
                 textcolor(RED);
                 textbackground(RED);
+            }
+            else if (map[i][j] == '@') {
+                textcolor(MAGENTA);
+                textbackground(LIGHTGREEN);
             }
             if (pastmap[i][j] != map[i][j] || (j==0)) {
                 gotoxy(j+1, i+3);//to have stats visible we add 3

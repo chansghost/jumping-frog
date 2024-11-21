@@ -16,15 +16,26 @@ void car_collision(char** map, Car* org_car, Car* other_car) {
     //sie usuwaj¹ po jakimœ czasie
 }
 
+int return_car(int x, int y, Car** cars, int max_cars) {
+    for (int i = 0; i < max_cars; i++) {
+        if (cars[i]->x == x) {//if we found car on the street we're currently exploring
+            if (cars[i]->y == y || cars[i]->y == y - 1 || cars[i]->y == y + 1) {
+
+            }
+        }
+    }
+}
+
+
 bool check_for_cars(char** map, Car** cars, int max_cars, int index) {
     int y2 = 0;
     int y = cars[index]->y;
     int street = cars[index]->x;
     if ((cars[index]->street_number) % 2 == 0) {
-        y += cars[index]->speed;
+        y += 1;
     }
     else {
-        y -= cars[index]->speed;
+        y -= 1;
     }
     for (int i = 0; i < max_cars; i++) {
         if (!(cars[i]->y == -1) && i != index && cars[i]->x == street) {//if initialized
@@ -47,7 +58,7 @@ void reset_car(Car* car, bool friendly) {
     car->speed = 0;
 
 }
-void move_car(char** map, Car** cars, int index, int max_cars) {
+void move_car(char** map, Car** cars, int index, int max_cars,Frog*frog) {
     if (!(check_for_cars(map, cars, max_cars, index))) {
         Car* car = cars[index];
         if (!(car->x == -1)) {//if car is initialized on the map
@@ -64,6 +75,9 @@ void move_car(char** map, Car** cars, int index, int max_cars) {
             }
             if (car_bounds(map, car->x, car->y)) {
                 render_car(map, car, ADD);
+                if (car->car_id == frog->car_index) {
+                    move_frog(map, frog, car->x, car->y);
+                }
             }
             else {
                 reset_car(car, car->friendly);

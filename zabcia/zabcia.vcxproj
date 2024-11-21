@@ -130,16 +130,20 @@
     <ClCompile Include="cars.cpp" />
     <ClCompile Include="conio2.cpp" />
     <ClCompile Include="frog.cpp" />
+    <ClCompile Include="gameplayy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
+    <ClCompile Include="memory_handling.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cars.h" />
     <ClInclude Include="conio2.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="frog.h" />
+    <ClInclude Include="gameplayy.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="map.h" />
+    <ClInclude Include="memory_handling.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
