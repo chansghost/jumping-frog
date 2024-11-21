@@ -8,7 +8,7 @@ void initialize_frog(char**map,Frog* frog) {
 	frog->jump_distance = 1;
 	frog->lives = 1;
 	frog->symbol = '$';
-	frog->map_piece;
+	frog->map_piece=' ';//pocz¹tkowy slot ¿aby
 }
 
 bool frog_within_bounds(int x,int y) {
@@ -37,9 +37,10 @@ void jump(char**map,Frog* frog, int direction)
 		y += frog->jump_distance;
 	}
 	if (frog_within_bounds(x, y)) {
-		update_map(map, x, y, frog->map_piece);
+		update_map(map, frog->x, frog->y, frog->map_piece);
 		frog->x = x;
 		frog->y = y;
+		frog->map_piece = map[y][x];
 		update_map(map, x, y, frog->symbol);
 	}
 	else {

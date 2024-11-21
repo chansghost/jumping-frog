@@ -5,17 +5,17 @@
 
 
 
-void gameplay(char** map, Car** cars, int max_cars, Frog*frog) {
+void gameplay(char** map,char**basemap,char**pastmap, Car** cars, int max_cars, Frog*frog) {
     int ch;
     while ((ch = getch()) != 'q') {
         for (int i = 0; i < max_cars; i++) {
             move_car(map, cars, i, max_cars);
         }
-        print_map(map);
+        print_map(map, pastmap, basemap);
         switch (ch) {
         case 'd':
             jump(map, frog, RIGHT);
-            print_map(map);
+            print_map(map,pastmap,basemap);
             break;
 
         }
@@ -23,12 +23,12 @@ void gameplay(char** map, Car** cars, int max_cars, Frog*frog) {
     
 
 }
-void start_game(char** map, Car** cars, int street_numbers[], int max_friend, int max_enemy, int min, int level, int points, int max_speed) {
+void start_game(char** map,char**basemap,char**pastmap, Car** cars, int street_numbers[], int max_friend, int max_enemy, int min, int level, int points, int max_speed) {
     // print_stats(level, points);
-    base_map(map, street_numbers);
-    print_map(map);
+    base_map(map, street_numbers,basemap);
+    print_map(map,pastmap,basemap);
     generate_all_cars(cars, map, max_friend, max_enemy, min, street_numbers, max_speed);
-    print_map(map);
+    print_map(map, pastmap, basemap);
     // clrscr();
 }
 
@@ -59,13 +59,25 @@ int main() {
         map[i] = (char*)malloc((MAP_WIDTH * sizeof(char)));
 
     }
-    start_game(map, cars, street_numbers, max_friend, max_enemy, min, level, points, max_speed);
+
+    char** basemap = (char**)malloc(MAP_HEIGHT * sizeof(char*));
+    for (int i = 0; i < MAP_HEIGHT; i++) {
+        basemap[i] = (char*)malloc((MAP_WIDTH * sizeof(char)));
+
+    }
+    char** pastmap = (char**)malloc(MAP_HEIGHT * sizeof(char*));
+    for (int i = 0; i < MAP_HEIGHT; i++) {
+        pastmap[i] = (char*)malloc((MAP_WIDTH * sizeof(char)));
+
+    }
+
+    start_game(map,basemap,pastmap, cars, street_numbers, max_friend, max_enemy, min, level, points, max_speed);
     int ch;
 
     Frog* frog = (Frog*)malloc(sizeof(Frog));
     initialize_frog(map, frog);
 
-    gameplay(map, cars, max_cars,frog);
+    gameplay(map,basemap,pastmap, cars, max_cars,frog);
 
 
     while ((ch = getch()) != 'q') {
