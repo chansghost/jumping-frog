@@ -8,38 +8,50 @@ void frog_on_car(char** map, Frog* frog, Car* car) {
 	frog->car_index = car->car_id;
 
 }
+bool check_for_frog(Car* car,Frog*frog) {
+    int x = (car->x)-1;//checking all over car
+    int y = (car->y)-1;
+    for (int i = 0; i < CAR_SIZE; i++) {//x
+        for (int j = 0; j < CAR_SIZE; j++) {//y
+            if (frog->x==x+j && frog->y==y+i) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
-bool check_collision(char** map, Frog* frog, Car** cars, int max_cars,int x,int y) {
-	/*int y = frog->y;
-	int x = frog->x;*/
-	int index;
-	if ((map[y][x] != ' ') && (map[y][x] != '|')) {
+bool check_collision(char** map, Frog* frog, Car** cars, int max_cars,int x,int y,int index) {
+    
+	if ((map[y][x] != ' ') && (map[y][x] != '|')) { //if we are trying to check collision on jumping frog
         
-        index = return_car(x, y, cars, max_cars);
+        if (index != -1) {//checking if we are checking for collision from car's perspective
+            if(!check_for_frog(cars[index],frog)) {
+                return false;
+            }
+        }
+        else index = return_car(x, y, cars, max_cars);
+
         if (cars[index]->friendly) {
-            
             frog_on_car(map, frog, cars[index]);
+        }
+        else frog->dead = true;
 
-        }
-        else {
-            
-            frog->dead = true;
-        }
-        
         return true;
+        
 	}
     
     return false;
 }
 
-void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog) {
+void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int streets[], int max_speed) {
     if (!(check_for_cars(map, cars, max_cars, index))) {
         Car* car = cars[index];
-        if (!(car->x == -1)) {//if car is initialized on the map
+        if (!(car->y == -1)) {//if car is initialized on the map
             render_car(map, car, REMOVE);
             int newy = car->y;
 
-            if ((car->street_number) % 2 == 0) {
+            if (car->direction==DOWN) {
                 newy += car->speed;
                 car->y = newy;
             }
@@ -49,14 +61,21 @@ void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog) {
             }
             if (car_bounds(map, car->x, car->y)) {
                 render_car(map, car, ADD);
+                check_collision(map, frog, cars,max_cars,car->x,car->y,car->car_id);
+                //if(check_collision(map,frog,cars) && frog->dead)
                 if (car->car_id == frog->car_index) {
                     move_frog(map, frog, car->x, car->y);
                 }
             }
             else {
-                reset_car(car, car->friendly);
+                int x = car->x;
+                reset_car(car, car->friendly,x,car->direction);
             }
         }
+        else if (car->respawn == 0) {
+            generate_car(car, map, car->friendly, streets, max_speed);
+        }
+        else car->respawn--;
     }
 }
 
@@ -78,6 +97,7 @@ void jump(char** map, Frog* frog, int direction, Car** cars, int max_cars)
         y += frog->jump_distance;
     }
     if (frog_within_bounds(x, y)) {//dodac wygrywajace
+        frog->jumping = true;
         if (frog->car_index != -1) {
             //frog is on car
             frog->car_index = -1;
@@ -96,6 +116,7 @@ void jump(char** map, Frog* frog, int direction, Car** cars, int max_cars)
             move_frog(map, frog, x, y);
         }
         else move_frog(map, frog, x, y);
+        frog->jumping = false;
         
     }
     else {

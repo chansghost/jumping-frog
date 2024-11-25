@@ -10,6 +10,7 @@ void initialize_frog(char** map, Frog* frog) {
 	frog->map_piece = ' ';//pocz¹tkowy slot ¿aby
 	frog->car_index = -1;
 	frog->dead = false;
+	frog->jumping = false;
 }
 
 
@@ -21,8 +22,10 @@ bool frog_within_bounds(int x,int y) {
 }
 
 void move_frog(char** map, Frog* frog, int x, int y) {
+	if (frog->map_piece != 'F' && frog->map_piece != 'E') {
+		update_map(map, frog->x, frog->y, frog->map_piece);
+	}
 	
-	update_map(map, frog->x, frog->y, frog->map_piece);
 	frog->x = x;
 	frog->y = y;
 	frog->map_piece = map[y][x];

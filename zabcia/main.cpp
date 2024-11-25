@@ -6,20 +6,30 @@
 
 
 
-void gameplay(char** map,char**basemap,char**pastmap, Car** cars, int max_cars, Frog*frog) {
+void gameplay(char** map,char**basemap,char**pastmap, Car** cars, int max_cars, Frog*frog,int streets[],int max_speed) {
     int key;
     bool quit = false;
     while (!quit) {//koniec lvl pozniej tu trzeba wsadzic
         for (int i = 0; i < max_cars; i++) {
-            move_car(map, cars, i, max_cars,frog);
+            if (frog->dead) break;
+            move_car(map, cars, i, max_cars,frog,streets,max_speed);
         }
         
         if (kbhit()) {
             key = getch();
             switch (key) {
-                case 'd':
-                    jump(map, frog, RIGHT,cars,max_cars);
+                case 'w':
+                    jump(map, frog, UP,cars,max_cars);
                     //print_map(map, pastmap, basemap);
+                    break;
+                case 's':
+                    jump(map, frog, DOWN, cars, max_cars);
+                    break;
+                case 'a':
+                    jump(map, frog, LEFT, cars, max_cars);
+                    break;
+                case 'd':
+                    jump(map, frog, RIGHT, cars, max_cars);
                     break;
                 case 'q':
                     quit = true;
@@ -92,7 +102,7 @@ int main() {
     Frog* frog = (Frog*)malloc(sizeof(Frog));
     initialize_frog(map, frog);
 
-    gameplay(map,basemap,pastmap, cars, max_cars,frog);
+    gameplay(map,basemap,pastmap, cars, max_cars,frog,street_numbers,max_speed);
 
 
     while ((ch = getch()) != 'q') {

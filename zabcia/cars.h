@@ -9,9 +9,11 @@ typedef struct {
     int speed;
     bool friendly;
     char symbol;
+    int respawn;
+    int direction;
 }Car;
 
-void reset_car(Car* car, bool friendly);
+void reset_car(Car* car, bool friendly,int x=-1,int direction=-1);
 
 void car_collision(char** map, Car* org_car, Car* other_car);
 
@@ -28,3 +30,4 @@ int return_car(int x, int y, Car** cars,int max_cars);
 bool check_for_cars(char** map, Car** cars, int max_cars, int index);
 
 void generate_all_cars(Car** cars, char** map, int max_friendly, int max_enemy, int min_cars, int streets[], int max_speed);
+

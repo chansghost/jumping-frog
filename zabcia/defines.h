@@ -12,4 +12,5 @@
 #define UP 2
 #define LEFT 3
 #define DOWN 4
+#define FROG 'F'
 

@@ -11,6 +11,8 @@ typedef struct {
 	char map_piece;
 	int car_index;
 	bool dead;
+	bool jumping;//checking if the frog is currently making a jump (needed for
+	//checking the collision)
 
 }Frog;
 

@@ -52,13 +52,14 @@ bool check_for_cars(char** map, Car** cars, int max_cars, int index) {
     return false;
 }
 
-void reset_car(Car* car, bool friendly) {
-    car->x = -1;
+void reset_car(Car* car, bool friendly,int x,int direction) {
+    car->x = x;
     car->y = -1;
     car->symbol = ' ';
     car->friendly = friendly;
     car->street_number = -1;
     car->speed = 0;
+    car->direction;
 
 }
 
@@ -66,8 +67,8 @@ void reset_car(Car* car, bool friendly) {
 
 
 void render_car(char** map, Car* car, bool clear) {
-    int x = (car->x) - 1;
-    int y = (car->y) - 1;
+    int x = (car->x) - 1;//minus one, since car drawing begins higher than it's
+    int y = (car->y) - 1;//declared coords
     char symbol;
     if (clear) {
         symbol = ' ';
@@ -100,26 +101,42 @@ void generate_random_car_position(Car* car, char** map, int streets[]) {
     srand(time(NULL));
     int x_pos, y_pos, street_number;
     bool empty = false;
-    while (!empty) {
-        street_number = rand() % STREETS;
-        x_pos = streets[street_number];
-        y_pos = rand() % 37;//hardcoded because it doesn't work with a variable name for some reason?
+    if (car->x == -1) {//if car is not initialized (we keep cars on the same street)
+        while (!empty) {
+            street_number = rand() % STREETS;
+            x_pos = streets[street_number];
+            car->street_number = street_number;
+            
+            y_pos = rand() % 37;//hardcoded because it doesn't work with a variable name for some reason?
 
-        if (car_bounds(map, x_pos, y_pos)) {
-            if (map[y_pos - 1][x_pos] == ' ' && map[y_pos + 1][x_pos] == ' ' && map[y_pos][x_pos] == ' ') {//if there is no car already 
-                if (map[y_pos - 2][x_pos] == ' ' && map[y_pos + 2][x_pos] == ' ') {
-                    empty = true;
-                    map[y_pos][x_pos] = 'O';
+            if (car_bounds(map, x_pos, y_pos)) {
+                if (map[y_pos - 1][x_pos] == ' ' && map[y_pos + 1][x_pos] == ' ' && map[y_pos][x_pos] == ' ') {//if there is no car already 
+                    if (map[y_pos - 2][x_pos] == ' ' && map[y_pos + 2][x_pos] == ' ') {
+                        empty = true;
+                       // map[y_pos][x_pos] = 'O';
+                    }
+
                 }
-
             }
+
         }
-
+        car->x = x_pos;
+        car->y = y_pos;
+        if ((car->street_number) % 2 == 0) {
+            car->direction = DOWN;
+        }
+        else car->direction = UP;
     }
-    car->street_number = street_number;
+    else {
+        if (car->direction == DOWN) {
+            car->y = 1;
+        }
+        else {
+            car->y = MAP_HEIGHT - 2;
+        }
+    }
 
-    car->x = x_pos;
-    car->y = y_pos;
+    
 }
 void generate_car(Car* car, char** map, bool friendly, int streets[], int max_speed) {
     generate_random_car_position(car, map, streets);
@@ -138,6 +155,8 @@ void generate_car(Car* car, char** map, bool friendly, int streets[], int max_sp
     }
     int random_speed = (rand() % (max_speed - 1)) + 1;
     car->speed = random_speed;
+    int respawn= (rand() % (max_speed - 1)) + 1;
+    car->respawn = respawn;
 
     render_car(map, car, ADD);
 
