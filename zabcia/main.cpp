@@ -9,43 +9,43 @@
 void gameplay(char** map,char**basemap,char**pastmap, Car** cars, int max_cars, Frog*frog,int streets[],int max_speed) {
     int key;
     bool quit = false;
+    time_t start = time(NULL);
     while (!quit) {//koniec lvl pozniej tu trzeba wsadzic
+        if (kbhit()) {
+            key = getch();
+            start = time(NULL);
+            switch (key) {
+            case 'w':
+                jump(map, frog, UP, cars, max_cars);
+                //print_map(map, pastmap, basemap);
+                break;
+            case 's':
+                jump(map, frog, DOWN, cars, max_cars);
+                break;
+            case 'a':
+                jump(map, frog, LEFT, cars, max_cars);
+                break;
+            case 'd':
+                jump(map, frog, RIGHT, cars, max_cars);
+                break;
+            case 'q':
+                quit = true;
+                break;
+            }
+        }
         for (int i = 0; i < max_cars; i++) {
             if (frog->dead) break;
             move_car(map, cars, i, max_cars,frog,streets,max_speed);
         }
-        
-        if (kbhit()) {
-            key = getch();
-            switch (key) {
-                case 'w':
-                    jump(map, frog, UP,cars,max_cars);
-                    //print_map(map, pastmap, basemap);
-                    break;
-                case 's':
-                    jump(map, frog, DOWN, cars, max_cars);
-                    break;
-                case 'a':
-                    jump(map, frog, LEFT, cars, max_cars);
-                    break;
-                case 'd':
-                    jump(map, frog, RIGHT, cars, max_cars);
-                    break;
-                case 'q':
-                    quit = true;
-                    break;
-            }
+        if (time(NULL) - start > TIMEOUT) {
+            frog->dead=true;
         }
-
-        print_map(map, pastmap, basemap);
         if (frog->dead) {
             quit = true;
             cputs("GAME OVERRRRRRRRR");
         }
-        
+        print_map(map, pastmap, basemap);
     }
-    
-
 }
 void start_game(char** map,char**basemap,char**pastmap, Car** cars, int street_numbers[], int max_friend, int max_enemy, int min, int level, int points, int max_speed) {
     // print_stats(level, points);

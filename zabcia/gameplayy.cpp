@@ -69,6 +69,9 @@ void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int s
             }
             else {
                 int x = car->x;
+                if (car->car_id == frog->car_index) {
+                    frog->dead = true;
+                }
                 reset_car(car, car->friendly,x,car->direction);
             }
         }
@@ -76,6 +79,9 @@ void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int s
             generate_car(car, map, car->friendly, streets, max_speed);
         }
         else car->respawn--;
+    }
+    else if(cars[index]->car_id == frog->car_index) {
+        frog->dead = true;
     }
 }
 

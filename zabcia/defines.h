@@ -13,4 +13,5 @@
 #define LEFT 3
 #define DOWN 4
 #define FROG 'F'
+#define TIMEOUT 2
 
