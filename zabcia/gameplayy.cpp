@@ -20,6 +20,12 @@ bool check_for_frog(Car* car,Frog*frog) {
     }
     return false;
 }
+bool obstacle_check(char** map, int x, int y) {
+    if (map[y][x] == 'O') {
+        return true;
+    }
+    return false;
+}
 
 bool check_collision(char** map, Frog* frog, Car** cars, int max_cars,int x,int y,int index) {
     
@@ -117,15 +123,101 @@ void jump(char** map, Frog* frog, int direction, Car** cars, int max_cars)
                 jump(map, frog, direction, cars, max_cars);
             }
         }
-        else if (!check_collision(map, frog, cars, max_cars,x,y)) {//wrzucic do movecar
-            
-            move_frog(map, frog, x, y);
+        else if (!obstacle_check(map, x, y)) {
+            if (!check_collision(map, frog, cars, max_cars, x, y)) {//if we are don't jump on any car 
+                move_frog(map, frog, x, y);
+            }
         }
-        else move_frog(map, frog, x, y);
+        else cputs("nie wolno!!!!!!!!");
         frog->jumping = false;
         
     }
     else {
         cputs("nie wolno!!!!!!!!");
     }
+}
+int chooseLevel() {
+    clrscr();
+    cputs("Choose game level:\n");
+    textbackground(RED);
+    putch('0');
+    cputs("\n");
+    putch('1');
+    cputs("\n");
+    putch('2');
+    cputs("\n");
+    putch('3');
+    textbackground(BLACK);
+    int key;
+    key = getch();
+
+    switch (key)
+    {
+    case '0':
+        clrscr();
+        return 0;
+    case '1':
+        clrscr();
+        return 1;
+    case '2':
+        clrscr();
+        return 2;
+    case '3':
+        clrscr();
+        return 3;
+    }
+}
+void gameplay(char** map, char** basemap, char** pastmap, Car** cars, int max_cars, Frog* frog, int streets[], int max_speed, int time) {
+    int key;
+    bool quit = false;
+    time_t start = time(NULL);
+    while (!quit) {//koniec lvl pozniej tu trzeba wsadzic
+        if (kbhit()) {
+            key = getch();
+            start = time(NULL);
+            switch (key) {
+            case 'w':
+                jump(map, frog, UP, cars, max_cars);
+                //print_map(map, pastmap, basemap);
+                break;
+            case 's':
+                jump(map, frog, DOWN, cars, max_cars);
+                break;
+            case 'a':
+                jump(map, frog, LEFT, cars, max_cars);
+                break;
+            case 'd':
+                jump(map, frog, RIGHT, cars, max_cars);
+                break;
+            case 'q':
+                quit = true;
+                break;
+            }
+        }
+        for (int i = 0; i < max_cars; i++) {
+            if (frog->dead) break;
+            move_car(map, cars, i, max_cars, frog, streets, max_speed);
+        }
+        if (time(NULL) - start > time) {
+            frog->dead = true;
+        }
+        if (frog->dead) {
+            quit = true;
+            cputs("GAME OVERRRRRRRRR");
+        }
+        print_map(map, pastmap, basemap);
+    }
+}
+
+void game(char** map, char** basemap, char** pastmap,int max_cars, Car** cars, LevelConfig* config, Frog* frog,Obstacle**obstacles) {
+    int sidewalks[SIDEWALKS];
+    int street_numbers[STREETS];
+    base_map(map, street_numbers, basemap,sidewalks);
+    print_map(map, pastmap, basemap);
+    generate_all_cars(cars, map, config->max_friend, config->max_enemy, config->minimum_cars, street_numbers, config->max_speed);
+    generate_obstacles(obstacles, sidewalks, map, config->max_obstacles);
+    print_map(map, pastmap, basemap);
+    frog->jump_distance = config->frog_jump;
+    gameplay(map, basemap, pastmap, cars, max_cars, frog, street_numbers, config->max_speed,config->frog_time);
+
 }

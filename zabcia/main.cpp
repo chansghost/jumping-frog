@@ -2,82 +2,44 @@
 #include "cars.h"
 #include "frog.h"
 #include "gameplayy.h"
+#include "obstacle.h"
+#include "config.h"
 #include "includes.h"
-
-
-
-void gameplay(char** map,char**basemap,char**pastmap, Car** cars, int max_cars, Frog*frog,int streets[],int max_speed) {
-    int key;
-    bool quit = false;
-    time_t start = time(NULL);
-    while (!quit) {//koniec lvl pozniej tu trzeba wsadzic
-        if (kbhit()) {
-            key = getch();
-            start = time(NULL);
-            switch (key) {
-            case 'w':
-                jump(map, frog, UP, cars, max_cars);
-                //print_map(map, pastmap, basemap);
-                break;
-            case 's':
-                jump(map, frog, DOWN, cars, max_cars);
-                break;
-            case 'a':
-                jump(map, frog, LEFT, cars, max_cars);
-                break;
-            case 'd':
-                jump(map, frog, RIGHT, cars, max_cars);
-                break;
-            case 'q':
-                quit = true;
-                break;
-            }
-        }
-        for (int i = 0; i < max_cars; i++) {
-            if (frog->dead) break;
-            move_car(map, cars, i, max_cars,frog,streets,max_speed);
-        }
-        if (time(NULL) - start > TIMEOUT) {
-            frog->dead=true;
-        }
-        if (frog->dead) {
-            quit = true;
-            cputs("GAME OVERRRRRRRRR");
-        }
-        print_map(map, pastmap, basemap);
-    }
-}
-void start_game(char** map,char**basemap,char**pastmap, Car** cars, int street_numbers[], int max_friend, int max_enemy, int min, int level, int points, int max_speed) {
-    // print_stats(level, points);
-    base_map(map, street_numbers,basemap);
-    print_map(map,pastmap,basemap);
-    generate_all_cars(cars, map, max_friend, max_enemy, min, street_numbers, max_speed);
-    print_map(map, pastmap, basemap);
-    // clrscr();
-}
-
+#define _CRT_SECURE_NO_WARNINGS
 
 int main() {
     srand(time(NULL));
+    int level;//poczatkowy
+    int points = 15;//do zmiany pozniej
     //robocze
-    int level = 5;
-    int points = 15;
-    int max_friend = 20;
-    int max_enemy = 20;
-    int max_cars = max_friend + max_enemy;
-    int min = 3;
-    int max_speed = 3;
-    //robocze
+    //0 & even numbers move down, odd numbers move up
+    //level config
+    level = chooseLevel();
 
-    int street_numbers[STREETS];//0 & even numbers move down, odd numbers move up
+    const char* filename = "config.txt";
+    LevelConfig config;
+    FILE* file = NULL;
+    fopen_s(&file, filename, "r");
+    read_lvl_config(file, level, &config);
+    fclose(file);
 
-    
+    int max_cars = config.max_friend + config.max_enemy;
+
+
+    printLevel(config, level);
+    //wybierz level
+    //start gry, na beginner level
     
     
     Car** cars = (Car**)malloc(max_cars * sizeof(Car*));
     for (int i = 0; i < max_cars; i++) {
         cars[i] = (Car*)malloc(sizeof(Car));
         reset_car(cars[i], NEW);
+    }
+    Obstacle** obstacles = (Obstacle**)malloc(config.max_obstacles * sizeof(Obstacle*));
+    for (int i = 0; i < config.max_obstacles; i++) {
+        obstacles[i] = (Obstacle*)malloc(sizeof(Obstacle));
+        initialize_obstacle(obstacles[i]);
     }
     char** basemap = (char**)malloc(MAP_HEIGHT * sizeof(char*));
     for (int i = 0; i < MAP_HEIGHT; i++) {
@@ -94,28 +56,15 @@ int main() {
         pastmap[i] = (char*)malloc((MAP_WIDTH * sizeof(char)));
 
     }
-    //allocate(&map, &pastmap, max_cars);
 
-    start_game(map,basemap,pastmap, cars, street_numbers, max_friend, max_enemy, min, level, points, max_speed);
-    int ch;
-
+   
     Frog* frog = (Frog*)malloc(sizeof(Frog));
     initialize_frog(map, frog);
 
-    gameplay(map,basemap,pastmap, cars, max_cars,frog,street_numbers,max_speed);
+    game(map, basemap, pastmap, max_cars, cars, &config, frog, obstacles);
 
-
-    while ((ch = getch()) != 'q') {
-
-        switch (ch) {
-        case 'a':
-            //czekamy na ten przycisk
-            
-
-            break;
-
-        }
-    }
+    
+    
 
     free_memory(map, pastmap, max_cars);
     for (int i = 0; i < max_cars; i++) {

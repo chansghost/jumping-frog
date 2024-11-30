@@ -3,6 +3,8 @@
 #include "frog.h"
 #include "cars.h"
 #include "map.h"
+#include "obstacle.h"
+#include "config.h"
 
 
 void frog_on_car(char** map, Frog* frog, Car* car);
@@ -14,3 +16,9 @@ void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int s
 void jump(char** map, Frog* frog, int direction, Car** cars, int max_cars);
 
 bool check_for_frog(Car* car,Frog*frog);
+
+bool obstacle_check(char** map, int x, int y);
+
+int chooseLevel();
+void gameplay(char** map,char**basemap,char** pastmap, Car** cars, int max_cars, Frog* frog, int streets[], int max_speed,int time);
+void game(char** map, char** basemap, char** pastmap,int max_cars, Car** cars, LevelConfig* config, Frog* frog,Obstacle**obstacles);

@@ -14,6 +14,25 @@ void print_stats(int level, int points) {
 
 }
 
+void colour_handling(char** map, int i, int j) {
+    if (map[i][j] == 'F') {
+        textcolor(LIGHTBLUE);
+        textbackground(LIGHTBLUE);
+    }
+    else if (map[i][j] == 'E') {
+        textcolor(RED);
+        textbackground(RED);
+    }
+    else if (map[i][j] == '@') {
+        textcolor(MAGENTA);
+        textbackground(LIGHTGREEN);
+    }
+    else if (map[i][j] == 'O') {
+        textcolor(YELLOW);
+        textbackground(YELLOW);
+    }
+}
+
 void update_past_map(char** pastmap, char** map) {
     for (int i = 0; i < MAP_HEIGHT; i++) { //y
         for (int j = 0; j < MAP_WIDTH; j++) {//x
@@ -28,23 +47,12 @@ void print_map(char** map,char**pastmap,char**basemap) {
     print_stats(1, 2);
     for (int i = 0; i < MAP_HEIGHT; i++) { //y
         for (int j = 0; j < MAP_WIDTH; j++) {//x
-            if (map[i][j] == 'F') {
-                textcolor(LIGHTBLUE);
-                textbackground(LIGHTBLUE);
-            }
-            else if (map[i][j] == 'E') {
-                textcolor(RED);
-                textbackground(RED);
-            }
-            else if (map[i][j] == '@') {
-                textcolor(MAGENTA);
-                textbackground(LIGHTGREEN);
-            }
-            if (pastmap[i][j] != map[i][j] || (j==0)) {
-                gotoxy(j+1, i+3);//to have stats visible we add 3
+            colour_handling(map, i, j);
+            if (pastmap[i][j] != map[i][j] || (j == 0)) {
+                gotoxy(j + 1, i + 3);//to have stats visible we add 3
                 putch(map[i][j]);
-
             }
+            
             textcolor(WHITE);
             textbackground(BLACK);
 
@@ -63,8 +71,9 @@ void map_tests(char** map) {
     }
 }
 // .0100'0'00101000001
-void base_map(char** map, int street_numbers[],char**basemap) {
+void base_map(char** map, int street_numbers[],char**basemap,int sidewalks[]) {
     int street_counter = 0;
+    int sidewalk_counter = 0;
     int counter = -1;//auxiliary variable
     bool placed_sidewalk = true;
     for (int i = 0; i < MAP_HEIGHT; i++) { //y
@@ -88,6 +97,10 @@ void base_map(char** map, int street_numbers[],char**basemap) {
                     //run only in the first row
                     street_numbers[street_counter] = j;//saving the x value for the given street no.
                     street_counter++;
+                    sidewalks[sidewalk_counter] = j + 4;//sidewalks are always 4 fields away from the middle of the street
+                    sidewalk_counter++;
+
+                    //+4 dla obstacles
                 }
 
             }
