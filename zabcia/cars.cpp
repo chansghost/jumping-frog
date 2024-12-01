@@ -10,8 +10,8 @@
 void car_collision(char** map, Car* org_car, Car* other_car) {
     render_car(map, org_car, REMOVE);
     render_car(map, other_car, REMOVE);
-    reset_car(org_car, org_car->friendly);
-    reset_car(other_car, other_car->friendly);
+    reset_car(org_car, org_car->friendly,org_car->x);
+    reset_car(other_car, other_car->friendly,other_car->x);
     //pozniej zrobie zeby sie rozlatywa³y na obstacles ktore
     //sie usuwaj¹ po jakimœ czasie
 }
@@ -19,7 +19,7 @@ void car_collision(char** map, Car* org_car, Car* other_car) {
 int return_car(int x, int y, Car** cars, int max_cars) {
     for (int i = 0; i < max_cars; i++) {
         if (!(cars[i]->y == -1)) {
-            if (cars[i]->x == x) {//if we found car on the street we're currently exploring
+            if (cars[i]->x == x || cars[i]->x == x-1 || cars[i]->x == x+1) {//if we found car on the street we're currently exploring
                 if (cars[i]->y == y || cars[i]->y == y - 1 || cars[i]->y == y + 1) {
                     return i;
                 }
@@ -34,11 +34,11 @@ bool check_for_cars(char** map, Car** cars, int max_cars, int index) {
     int y2 = 0;
     int y = cars[index]->y;
     int street = cars[index]->x;
-    if ((cars[index]->street_number) % 2 == 0) {
-        y += 1;
+    if (cars[index]->direction==DOWN) {
+        y += cars[index]->speed;
     }
     else {
-        y -= 1;
+        y -= cars[index]->speed;
     }
     for (int i = 0; i < max_cars; i++) {
         if (!(cars[i]->y == -1) && i != index && cars[i]->x == street) {//if initialized
@@ -52,14 +52,14 @@ bool check_for_cars(char** map, Car** cars, int max_cars, int index) {
     return false;
 }
 
-void reset_car(Car* car, bool friendly,int x,int direction) {
+void reset_car(Car* car, bool friendly,int x,int direction,int street_number) {
     car->x = x;
     car->y = -1;
     car->symbol = ' ';
     car->friendly = friendly;
-    car->street_number = -1;
+    car->street_number = street_number;
     car->speed = 0;
-    car->direction;
+    car->direction=direction;
 
 }
 
@@ -129,10 +129,10 @@ void generate_random_car_position(Car* car, char** map, int streets[]) {
     }
     else {
         if (car->direction == DOWN) {
-            car->y = 1;
+            car->y = 2;
         }
         else {
-            car->y = MAP_HEIGHT - 2;
+            car->y = MAP_HEIGHT - 3;
         }
     }
 
@@ -163,16 +163,18 @@ void generate_car(Car* car, char** map, bool friendly, int streets[], int max_sp
 }
 
 void generate_all_cars(Car** cars, char** map, int max_friendly, int max_enemy, int min_cars, int streets[], int max_speed) {
-    int friendly_cars = (rand() % (max_friendly - min_cars)) + min_cars; //generates random amount of
-    //friendly cars between max and min amount declared
-    int enemy_cars = (rand() % (max_enemy - min_cars)) + min_cars;
-    for (int i = 0; i < friendly_cars; i++) {
-        generate_car(cars[i], map, true, streets, max_speed);
-        cars[i]->car_id = i;
-    }
-    for (int i = 0; i < enemy_cars; i++) {
-        generate_car(cars[i + friendly_cars], map, false, streets, max_speed);
-        cars[i + friendly_cars]->car_id = i + friendly_cars;
+    if (min_cars != 0) {
+        int friendly_cars = (rand() % (max_friendly - min_cars)) + min_cars; //generates random amount of
+        //friendly cars between max and min amount declared
+        int enemy_cars = (rand() % (max_enemy - min_cars)) + min_cars;
+        for (int i = 0; i < friendly_cars; i++) {
+            generate_car(cars[i], map, true, streets, max_speed);
+            cars[i]->car_id = i;
+        }
+        for (int i = 0; i < enemy_cars; i++) {
+            generate_car(cars[i + friendly_cars], map, false, streets, max_speed);
+            cars[i + friendly_cars]->car_id = i + friendly_cars;
+        }
     }
 
 

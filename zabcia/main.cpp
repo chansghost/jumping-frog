@@ -9,11 +9,8 @@
 
 int main() {
     srand(time(NULL));
-    int level;//poczatkowy
-    int points = 15;//do zmiany pozniej
-    //robocze
-    //0 & even numbers move down, odd numbers move up
-    //level config
+    int level;
+    int points = 15;
     level = chooseLevel();
 
     const char* filename = "config.txt";
@@ -25,10 +22,6 @@ int main() {
 
     int max_cars = config.max_friend + config.max_enemy;
 
-
-    printLevel(config, level);
-    //wybierz level
-    //start gry, na beginner level
     
     
     Car** cars = (Car**)malloc(max_cars * sizeof(Car*));
@@ -60,8 +53,16 @@ int main() {
    
     Frog* frog = (Frog*)malloc(sizeof(Frog));
     initialize_frog(map, frog);
-
-    game(map, basemap, pastmap, max_cars, cars, &config, frog, obstacles);
+    frog->jump_distance = config.frog_jump;
+    //game(map, basemap, pastmap, max_cars, cars, &config, frog, obstacles);
+    int sidewalks[SIDEWALKS];
+    int street_numbers[STREETS];
+    base_map(map, street_numbers, basemap, sidewalks);
+    print_map(map, pastmap, basemap);
+    generate_all_cars(cars, map, config.max_friend, config.max_enemy, config.minimum_cars, street_numbers, config.max_speed);
+    generate_obstacles(obstacles, sidewalks, map, config.max_obstacles);
+    print_map(map, pastmap, basemap);
+    gameplay(map, basemap, pastmap, cars, max_cars, frog, street_numbers, config.max_speed, config.frog_time);
 
     
     

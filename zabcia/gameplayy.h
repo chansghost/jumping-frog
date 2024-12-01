@@ -20,5 +20,5 @@ bool check_for_frog(Car* car,Frog*frog);
 bool obstacle_check(char** map, int x, int y);
 
 int chooseLevel();
-void gameplay(char** map,char**basemap,char** pastmap, Car** cars, int max_cars, Frog* frog, int streets[], int max_speed,int time);
+void gameplay(char** map,char**basemap,char** pastmap, Car** cars, int max_cars, Frog* frog, int streets[], int max_speed,int jump_time);
 void game(char** map, char** basemap, char** pastmap,int max_cars, Car** cars, LevelConfig* config, Frog* frog,Obstacle**obstacles);

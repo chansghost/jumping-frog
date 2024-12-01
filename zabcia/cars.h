@@ -13,7 +13,7 @@ typedef struct {
     int direction;
 }Car;
 
-void reset_car(Car* car, bool friendly,int x=-1,int direction=-1);
+void reset_car(Car* car, bool friendly,int x=-1,int direction=-1,int street_number=-1);
 
 void car_collision(char** map, Car* org_car, Car* other_car);
 

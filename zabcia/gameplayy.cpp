@@ -78,7 +78,7 @@ void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int s
                 if (car->car_id == frog->car_index) {
                     frog->dead = true;
                 }
-                reset_car(car, car->friendly,x,car->direction);
+                reset_car(car, car->friendly,x,car->direction,car->street_number);
             }
         }
         else if (car->respawn == 0) {
@@ -167,7 +167,7 @@ int chooseLevel() {
         return 3;
     }
 }
-void gameplay(char** map, char** basemap, char** pastmap, Car** cars, int max_cars, Frog* frog, int streets[], int max_speed, int time) {
+void gameplay(char** map, char** basemap, char** pastmap, Car** cars, int max_cars, Frog* frog, int streets[], int max_speed, int jump_time) {
     int key;
     bool quit = false;
     time_t start = time(NULL);
@@ -198,9 +198,9 @@ void gameplay(char** map, char** basemap, char** pastmap, Car** cars, int max_ca
             if (frog->dead) break;
             move_car(map, cars, i, max_cars, frog, streets, max_speed);
         }
-        if (time(NULL) - start > time) {
+        /*if (time(NULL) - start > jump_time) {
             frog->dead = true;
-        }
+        }*/
         if (frog->dead) {
             quit = true;
             cputs("GAME OVERRRRRRRRR");
