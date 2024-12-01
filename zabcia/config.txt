@@ -1,11 +1,12 @@
 level 0
-max_friend 10
+max_friend 13
 max_enemy 10
-minimum_cars 3
+minimum_cars 7
 max_speed 2
 max_obstacles 5
 frog_jump 2
 frog_time 3
+max_stops 7
 stork true
 
 level 1
@@ -16,6 +17,7 @@ max_speed 3
 max_obstacles 10
 frog_jump 3
 frog_time 2
+max_stops 6
 stork false
 
 level 2
@@ -26,6 +28,7 @@ max_speed 4
 max_obstacles 16
 frog_jump 3
 frog_time 2
+max_stops 5
 stork true
 
 level 3
@@ -33,7 +36,8 @@ max_friend 13
 max_enemy 17
 minimum_cars 10
 max_speed 4
-max_obstacles 16
+max_obstacles 19
 frog_jump 2
 frog_time 1
+max_stops 10
 stork true

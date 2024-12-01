@@ -41,7 +41,7 @@ void update_past_map(char** pastmap, char** map) {
     }
 }
 
-void print_map(char** map,char**pastmap,char**basemap) {
+void print_map(char** map,char**pastmap) {
     gotoxy(1, 1);
     //clrscr();
     print_stats(1, 2);

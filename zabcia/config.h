@@ -10,6 +10,7 @@ typedef struct {
     bool stork;
     int frog_jump;
     int frog_time;
+    int max_stops;
 }LevelConfig;
 
 void read_lvl_config(FILE* file, int level, LevelConfig* config);
@@ -17,3 +18,5 @@ void read_lvl_config(FILE* file, int level, LevelConfig* config);
 void printLevel(LevelConfig config,int level);
 
 int writeLevelConfig(FILE* file, int level,LevelConfig* config);
+
+int get_maxfriend(LevelConfig* config);

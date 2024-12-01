@@ -13,6 +13,7 @@ void read_lvl_config(FILE* file, int level, LevelConfig* config) {
                 fscanf_s(file, " max_obstacles %d", &config->max_obstacles);
                 fscanf_s(file, " frog_jump %d", &config->frog_jump);
                 fscanf_s(file, " frog_time %d", &config->frog_time);
+                fscanf_s(file, " max_stops %d", &config->max_stops);
 
                 fscanf_s(file, " stork %5s", first_char, sizeof(first_char)); 
 
@@ -59,4 +60,8 @@ int writeLevelConfig(FILE* file, int level, LevelConfig* config) {//only for tes
         level, level, config->max_friend, config->max_enemy, config->minimum_cars,
         config->max_speed, config->max_obstacles,
         config->stork ? "true" : "false", config->frog_jump, config->frog_time);
+}
+
+int get_maxfriend(LevelConfig* config) {
+    return config->max_friend;
 }

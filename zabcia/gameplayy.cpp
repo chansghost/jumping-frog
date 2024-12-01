@@ -51,6 +51,45 @@ bool check_collision(char** map, Frog* frog, Car** cars, int max_cars,int x,int 
     return false;
 }
 
+bool look_for_frog(Car* car,char**map) {
+    //vacinity is 2 fields all around
+    //check if frog is not already on this car index
+    int vacinity = CAR_SIZE*2 + 1;
+    int y = (car->y)-3;
+    int x = (car->x)-3;
+    for (int i = 0; i < vacinity; i++) {//x
+        for (int j = 0; j < vacinity; j++) {//y
+            if ((y + i) < MAP_HEIGHT && (y-3) > 0) {//precaution
+                if (map[y + i][x + j] == '@') {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+void respawn_car(char** map, Car* car, int streets[], int max_speed) {
+    int y;
+    if (car->respawn == 0) {
+        if (car->direction == DOWN) {
+            y = 3;
+        }
+        else y = MAP_HEIGHT - 3;
+        //cars always spawn on either y=3 or y=MAP_HEIGHT - 3 to fit
+        if (map[y][car->x] == ' ')//if no car spawned
+        {
+            generate_car(car, map, car->friendly, streets, max_speed,car->stops);
+
+        }
+        else {
+            car->respawn = 1;
+        }
+    }
+    else car->respawn--;
+}
+
+
 void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int streets[], int max_speed) {
     bool spawned_on_street = false;//to avoid "flashing cars" while spawning,
     //a boolean to check if during this round a car already spawned on the same street
@@ -58,31 +97,33 @@ void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int s
     if (!(check_for_cars(map, cars, max_cars, index))) {
         Car* car = cars[index];
         if (!(car->y == -1)) {//if car is initialized on the map
-            render_car(map, car, REMOVE);
-            newy = car->y;
+            if (frog->car_index==index || !car->stops || !look_for_frog(car, map)) {
+                render_car(map, car, REMOVE);
+                newy = car->y;
 
-            if (car->direction==DOWN) {
-                newy += car->speed;
-                car->y = newy;
-            }
-            else {
-                newy -= car->speed;
-                car->y = newy;
-            }
-            if (car_bounds(car->x, car->y)) {
-                render_car(map, car, ADD);
-                check_collision(map, frog, cars,max_cars,car->x,car->y,car->car_id);
-                //if(check_collision(map,frog,cars) && frog->dead)
-                if (car->car_id == frog->car_index) {
-                    move_frog(map, frog, car->x, car->y);
+                if (car->direction == DOWN) {
+                    newy += car->speed;
+                    car->y = newy;
                 }
-            }
-            else {
-                int x = car->x;
-                if (car->car_id == frog->car_index) {
-                    frog->dead = true;
+                else {
+                    newy -= car->speed;
+                    car->y = newy;
                 }
-                reset_car(car, car->friendly,x,car->direction,car->street_number);
+                if (car_bounds(car->x, car->y)) {
+                    render_car(map, car, ADD);
+                    check_collision(map, frog, cars, max_cars, car->x, car->y, car->car_id);
+                    //if(check_collision(map,frog,cars) && frog->dead)
+                    if (car->car_id == frog->car_index) {
+                        move_frog(map, frog, car->x, car->y);
+                    }
+                }
+                else {
+                    int x = car->x;
+                    if (car->car_id == frog->car_index) {
+                        frog->dead = true;
+                    }
+                    reset_car(car, car->friendly, x, car->direction, car->street_number,car->stops);
+                }
             }
         }
         else if (car->respawn == 0) {
@@ -93,7 +134,7 @@ void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int s
             //cars always spawn on either y=3 or y=MAP_HEIGHT - 3 to fit
             if(map[newy][car->x]==' ')//if no car spawned
             {
-                generate_car(car, map, car->friendly, streets, max_speed);
+                generate_car(car, map, car->friendly, streets, max_speed,car->stops);
                 
             }
             else {
@@ -129,6 +170,7 @@ void jump(char** map, Frog* frog, int direction, Car** cars, int max_cars)
         if (frog->car_index != -1) {
             //frog is on car
             frog->car_index = -1;
+            frog->map_piece = 'F';
             move_frog(map, frog, x, y);
             
             
@@ -152,6 +194,7 @@ void jump(char** map, Frog* frog, int direction, Car** cars, int max_cars)
         cputs("nie wolno!!!!!!!!");
     }
 }
+
 int chooseLevel() {
     clrscr();
     cputs("Choose game level:\n");
@@ -183,7 +226,8 @@ int chooseLevel() {
         return 3;
     }
 }
-void gameplay(char** map, char** basemap, char** pastmap, Car** cars, int max_cars, Frog* frog, int streets[], int max_speed, int jump_time) {
+
+void gameplay(char** map, char** pastmap, int max_cars,Car** cars, Frog* frog, int streets[], LevelConfig config){
     int key;
     bool quit = false;
     time_t start = time(NULL);
@@ -212,28 +256,30 @@ void gameplay(char** map, char** basemap, char** pastmap, Car** cars, int max_ca
         }
         for (int i = 0; i < max_cars; i++) {
             if (frog->dead) break;
-            move_car(map, cars, i, max_cars, frog, streets, max_speed);
+            move_car(map, cars, i, max_cars, frog, streets, config.max_speed);
         }
-        /*if (time(NULL) - start > jump_time) {
+        if (time(NULL) - start > config.frog_time) {
             frog->dead = true;
-        }*/
+        }
         if (frog->dead) {
             quit = true;
             cputs("GAME OVERRRRRRRRR");
         }
-        print_map(map, pastmap, basemap);
+        print_map(map, pastmap);
     }
 }
 
-void game(char** map, char** basemap, char** pastmap,int max_cars, Car** cars, LevelConfig* config, Frog* frog,Obstacle**obstacles) {
+void game(char** map,char**basemap, char** pastmap, Car** cars, LevelConfig config, Frog* frog,Obstacle**obstacles) {
+    int max_cars = config.max_enemy + config.max_friend;
     int sidewalks[SIDEWALKS];
     int street_numbers[STREETS];
     base_map(map, street_numbers, basemap,sidewalks);
-    print_map(map, pastmap, basemap);
-    generate_all_cars(cars, map, config->max_friend, config->max_enemy, config->minimum_cars, street_numbers, config->max_speed);
-    generate_obstacles(obstacles, sidewalks, map, config->max_obstacles);
-    print_map(map, pastmap, basemap);
-    frog->jump_distance = config->frog_jump;
-    gameplay(map, basemap, pastmap, cars, max_cars, frog, street_numbers, config->max_speed,config->frog_time);
+    print_map(map, pastmap);
+    generate_all_cars(cars, map,street_numbers,config);
+    generate_obstacles(obstacles, sidewalks, map, config.max_obstacles);
+    update_map(map, frog->x, frog->y, frog->symbol);
+    print_map(map, pastmap);
+    frog->jump_distance = config.frog_jump;
+    gameplay(map, pastmap,max_cars, cars, frog, street_numbers,config);
 
 }

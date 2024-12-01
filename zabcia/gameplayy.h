@@ -15,10 +15,16 @@ void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int s
 
 void jump(char** map, Frog* frog, int direction, Car** cars, int max_cars);
 
+void respawn_car(char** map, Car* car, int streets[], int max_speed);
+
 bool check_for_frog(Car* car,Frog*frog);
 
 bool obstacle_check(char** map, int x, int y);
 
 int chooseLevel();
-void gameplay(char** map,char**basemap,char** pastmap, Car** cars, int max_cars, Frog* frog, int streets[], int max_speed,int jump_time);
-void game(char** map, char** basemap, char** pastmap,int max_cars, Car** cars, LevelConfig* config, Frog* frog,Obstacle**obstacles);
+
+bool look_for_frog(Car*car,char**map);
+
+void gameplay(char** map,char** pastmap, int max_cars,Car** cars, Frog* frog, int streets[],LevelConfig config);
+
+void game(char** map, char**basemap,char** pastmap, Car** cars, LevelConfig config, Frog* frog,Obstacle**obstacles);

@@ -7,7 +7,7 @@ void print_stats(int level, int points);
 
 void colour_handling(char** map, int i, int j);
 
-void print_map(char** map,char**pastmap,char**basemap);
+void print_map(char** map,char**pastmap);
 
 void update_past_map(char** pastmap, char** map);
 
