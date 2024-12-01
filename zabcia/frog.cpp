@@ -22,12 +22,11 @@ bool frog_within_bounds(int x,int y) {
 }
 
 void move_frog(char** map, Frog* frog, int x, int y) {
-	if (frog->map_piece != 'F' && frog->map_piece != 'E') {
-		update_map(map, frog->x, frog->y, frog->map_piece);
-	}
+	update_map(map, frog->x, frog->y, frog->map_piece);
 	
 	frog->x = x;
 	frog->y = y;
+
 	frog->map_piece = map[y][x];
 	
 	update_map(map, x, y, frog->symbol);

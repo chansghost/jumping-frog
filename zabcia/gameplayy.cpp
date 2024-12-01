@@ -6,6 +6,7 @@ void frog_on_car(char** map, Frog* frog, Car* car) {
 	int y = car->y;
 	move_frog(map, frog, x, y);//reposition frog to the center of the car(aesthetic purposes)
 	frog->car_index = car->car_id;
+    
 
 }
 bool check_for_frog(Car* car,Frog*frog) {
@@ -51,11 +52,14 @@ bool check_collision(char** map, Frog* frog, Car** cars, int max_cars,int x,int 
 }
 
 void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int streets[], int max_speed) {
+    bool spawned_on_street = false;//to avoid "flashing cars" while spawning,
+    //a boolean to check if during this round a car already spawned on the same street
+    int newy;
     if (!(check_for_cars(map, cars, max_cars, index))) {
         Car* car = cars[index];
         if (!(car->y == -1)) {//if car is initialized on the map
             render_car(map, car, REMOVE);
-            int newy = car->y;
+            newy = car->y;
 
             if (car->direction==DOWN) {
                 newy += car->speed;
@@ -65,7 +69,7 @@ void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int s
                 newy -= car->speed;
                 car->y = newy;
             }
-            if (car_bounds(map, car->x, car->y)) {
+            if (car_bounds(car->x, car->y)) {
                 render_car(map, car, ADD);
                 check_collision(map, frog, cars,max_cars,car->x,car->y,car->car_id);
                 //if(check_collision(map,frog,cars) && frog->dead)
@@ -82,7 +86,19 @@ void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int s
             }
         }
         else if (car->respawn == 0) {
-            generate_car(car, map, car->friendly, streets, max_speed);
+            if (car->direction == DOWN) {
+                newy = 3;
+            }
+            else newy = MAP_HEIGHT - 3;
+            //cars always spawn on either y=3 or y=MAP_HEIGHT - 3 to fit
+            if(map[newy][car->x]==' ')//if no car spawned
+            {
+                generate_car(car, map, car->friendly, streets, max_speed);
+                
+            }
+            else {
+                car->respawn = 1;
+            }
         }
         else car->respawn--;
     }

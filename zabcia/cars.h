@@ -23,7 +23,7 @@ void generate_random_car_position(Car* car, char** map, int streets[]);
 
 void generate_car(Car* car, char** map, bool friendly, int streets[], int max_speed);
 
-bool car_bounds(char** map, int x, int y);
+bool car_bounds(int x, int y);
 
 int return_car(int x, int y, Car** cars,int max_cars);
 

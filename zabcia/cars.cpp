@@ -10,8 +10,8 @@
 void car_collision(char** map, Car* org_car, Car* other_car) {
     render_car(map, org_car, REMOVE);
     render_car(map, other_car, REMOVE);
-    reset_car(org_car, org_car->friendly,org_car->x);
-    reset_car(other_car, other_car->friendly,other_car->x);
+    reset_car(org_car, org_car->friendly,org_car->x,org_car->direction,org_car->street_number);
+    reset_car(other_car, other_car->friendly,other_car->x,other_car->direction,other_car->street_number);
     //pozniej zrobie zeby sie rozlatywa³y na obstacles ktore
     //sie usuwaj¹ po jakimœ czasie
 }
@@ -43,7 +43,7 @@ bool check_for_cars(char** map, Car** cars, int max_cars, int index) {
     for (int i = 0; i < max_cars; i++) {
         if (!(cars[i]->y == -1) && i != index && cars[i]->x == street) {//if initialized
             y2 = cars[i]->y;
-            if (y == y2 || (y - 1) == y2 || (y + 1) == y2) {
+            if (y == y2 || (y - 1) == y2 || (y + 1) == y2 || y2==(y+2) || y2==(y-2) || y2 == (y + 3) || y2 == (y - 3)) {
                 car_collision(map, cars[index], cars[i]);
                 return true;
             }
@@ -79,13 +79,15 @@ void render_car(char** map, Car* car, bool clear) {
     }
     for (int i = 0; i < CAR_SIZE; i++) {//x
         for (int j = 0; j < CAR_SIZE; j++) {//y
-            update_map(map, x + j, y + i, symbol);
+            if ((y + i) < MAP_HEIGHT && (y + i) > 0) {//precaution
+                update_map(map, x + j, y + i, symbol);
+            }
 
         }
     }
 }
 
-bool car_bounds(char** map, int x, int y) {
+bool car_bounds(int x, int y) {
     for (int i = 0; i < CAR_SIZE; i++) {
         if ((x + i) >= MAP_WIDTH || (x - i) < 0) {
             return false;
@@ -109,7 +111,7 @@ void generate_random_car_position(Car* car, char** map, int streets[]) {
             
             y_pos = rand() % 37;//hardcoded because it doesn't work with a variable name for some reason?
 
-            if (car_bounds(map, x_pos, y_pos)) {
+            if (car_bounds(x_pos, y_pos)) {
                 if (map[y_pos - 1][x_pos] == ' ' && map[y_pos + 1][x_pos] == ' ' && map[y_pos][x_pos] == ' ') {//if there is no car already 
                     if (map[y_pos - 2][x_pos] == ' ' && map[y_pos + 2][x_pos] == ' ') {
                         empty = true;
@@ -128,10 +130,12 @@ void generate_random_car_position(Car* car, char** map, int streets[]) {
         else car->direction = UP;
     }
     else {
+        
         if (car->direction == DOWN) {
-            car->y = 2;
+            car->y = 3;//to "fit" the whole car on the beginning of the street
         }
         else {
+            
             car->y = MAP_HEIGHT - 3;
         }
     }
