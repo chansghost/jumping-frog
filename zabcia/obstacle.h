@@ -1,6 +1,7 @@
 #pragma once
 #include "includes.h"
 #include "map.h"
+#include "defines.h"
 
 typedef struct {
 	int x, y;

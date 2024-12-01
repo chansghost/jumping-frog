@@ -17,7 +17,7 @@ void generate_obstacles(Obstacle** obstacles, int sidewalks[], char** map, int m
 			sidewalk_no = rand() % SIDEWALKS;
 			x_pos = sidewalks[sidewalk_no];
 			y_pos = rand() % (MAP_HEIGHT-1)+1;
-			if (map[y_pos][x_pos] == ' ') {
+			if (map[y_pos][x_pos] == EMPTY) {
 				empty = true;
 			}
 		}

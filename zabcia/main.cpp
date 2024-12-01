@@ -5,12 +5,20 @@
 #include "obstacle.h"
 #include "config.h"
 #include "includes.h"
+#include "bonus.h"
+#include "player.h"
 #define _CRT_SECURE_NO_WARNINGS
 
 int main() {
+    Player* player = (Player*)malloc(sizeof(Player));
+    initialize_player(player);
+
     srand(time(NULL));
     int level;
     int points = 15;
+
+    new_player(player);
+
     level = chooseLevel();
 
     const char* filename = "config.txt";
@@ -49,13 +57,21 @@ int main() {
         pastmap[i] = (char*)malloc((MAP_WIDTH * sizeof(char)));
 
     }
+    Bonus** bonuses= (Bonus**)malloc(config.bonuses * sizeof(Bonus*));
+    for (int i = 0; i < config.bonuses; i++) {
+        bonuses[i] = (Bonus*)malloc(sizeof(Bonus));
+        initialize_bonus(bonuses[i]);
+    }
 
    
     Frog* frog = (Frog*)malloc(sizeof(Frog));
     initialize_frog(map, frog);
-    
-    game(map, basemap, pastmap, cars, config, frog, obstacles);
 
+    
+    
+    game(map, basemap, pastmap, cars, config, frog, obstacles,bonuses,player);
+
+    
     
     
 

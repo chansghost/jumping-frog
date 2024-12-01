@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bonus.cpp" />
     <ClCompile Include="cars.cpp" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="conio2.cpp" />
@@ -136,8 +137,10 @@
     <ClCompile Include="map.cpp" />
     <ClCompile Include="memory_handling.cpp" />
     <ClCompile Include="obstacle.cpp" />
+    <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bonus.h" />
     <ClInclude Include="cars.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="conio2.h" />
@@ -148,6 +151,7 @@
     <ClInclude Include="map.h" />
     <ClInclude Include="memory_handling.h" />
     <ClInclude Include="obstacle.h" />
+    <ClInclude Include="player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

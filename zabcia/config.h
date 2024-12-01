@@ -11,6 +11,8 @@ typedef struct {
     int frog_jump;
     int frog_time;
     int max_stops;
+    int bonuses;
+    int bonus_time;
 }LevelConfig;
 
 void read_lvl_config(FILE* file, int level, LevelConfig* config);

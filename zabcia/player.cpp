@@ -1,0 +1,52 @@
+#include "player.h"
+
+void initialize_player(Player* player) {
+	player->points=0;
+	player->won = false;
+	player->level = 0;
+
+}
+
+void new_player(Player* player) {
+	int x = MAP_WIDTH / 2;
+	int y = MAP_HEIGHT / 2;
+	char c;
+	char nowe;
+	int i = 0;
+	
+	for (int i = 0; i < MAX_NAME; i++) {
+		c = getch();  // getche() wyœwietla wpisywane znaki na bie¿¹co
+		player->name[i] = c;
+		putch(c);
+		// Jeœli u¿ytkownik naciœnie 'q', koñczymy
+		if (c=='\r') {
+			player->name_length = i;
+			return;
+		}
+		
+	}
+}
+
+void ranking(Player*player,double timer) {
+	int x = (MAP_WIDTH+MAP_WIDTH/4);
+	int y = MAP_HEIGHT / 2;
+	gotoxy(x, y);
+	y++;
+	cputs(" Ranking:\n");
+	for (int i = 0; i < player->name_length; i++) {
+		gotoxy(x+i, y);
+		putch(player->name[i]);
+	}
+	y++;
+	gotoxy(x, y);
+	cputs("Points: ");
+	x += 1;
+	y++;
+	gotoxy(x, y);
+	printf("%d",player->points);
+	x= (MAP_WIDTH + MAP_WIDTH / 4);
+	y++;
+	gotoxy(x, y);
+	printf("%.1f", timer);
+
+}

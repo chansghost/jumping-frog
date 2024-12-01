@@ -23,13 +23,17 @@ void colour_handling(char** map, int i, int j) {
         textcolor(RED);
         textbackground(RED);
     }
-    else if (map[i][j] == '@') {
-        textcolor(MAGENTA);
+    else if (map[i][j] == FROG) {
+        textcolor(LIGHTGREEN);
         textbackground(LIGHTGREEN);
     }
     else if (map[i][j] == 'O') {
         textcolor(YELLOW);
         textbackground(YELLOW);
+    }
+    else if (map[i][j] == BONUS) {
+        textcolor(MAGENTA);
+        textbackground(MAGENTA);
     }
 }
 

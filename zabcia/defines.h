@@ -14,5 +14,8 @@
 #define DOWN 4
 #define FROG '@'
 #define TIMEOUT 2
+#define BONUS 'B'
+#define MAX_NAME 20
+#define EMPTY ' '
 
 
