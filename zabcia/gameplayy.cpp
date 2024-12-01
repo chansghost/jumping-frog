@@ -173,6 +173,26 @@ bool bonus_collected(char** map, Bonus** bonuses,Frog* frog,int direction,int ma
 }
 
 
+void try_on_car(char** map, Frog* frog, int direction, Car** cars, int max_cars) {
+    int x = frog->x - 1;//checking all over car
+    int y = (frog->y) - 1;
+    int index;
+    for (int i = 0; i < CAR_SIZE; i++) {//x
+        for (int j = 0; j < CAR_SIZE; j++) {//y
+            if ((y + i) < MAP_HEIGHT && (y - 1) > 0) {
+                if (map[y + i][x + j] == 'F') {
+                    index = return_car(x+j, y+i, cars, max_cars);
+
+                    if (cars[index]->friendly) {
+                        frog_on_car(map, frog, cars[index]);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 void jump(char** map, Frog* frog, int direction, Car** cars, int max_cars,int max_bonuses,Bonus**bonuses, Player* player)
 {
     int y = frog->y;
@@ -279,6 +299,8 @@ void gameplay(char** map, char** pastmap, int max_cars,Car** cars, Frog* frog, i
             case 'd':
                 jump(map, frog, RIGHT, cars, max_cars, config.bonuses, bonuses, player);
                 break;
+            case 'c':
+
             case 'q':
                 quit = true;
                 break;
