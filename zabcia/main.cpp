@@ -17,7 +17,7 @@ int main() {
     int level;
     int points = 15;
 
-    new_player(player);
+   // new_player(player);
 
     level = chooseLevel();
 

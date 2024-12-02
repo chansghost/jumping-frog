@@ -12,7 +12,7 @@ void frog_on_car(char** map, Frog* frog, Car* car);
 
 bool check_collision(char** map, Frog* frog, Car** cars, int max_cars,int x, int y,int index=-1);
 
-void try_on_car(char** map, Frog* frog, int direction, Car** cars, int max_cars);
+void try_on_car(char** map, Frog* frog, Car** cars, int max_cars);
 
 void move_car(char** map, Car** cars, int index, int max_cars, Frog* frog, int streets[], int max_speed);
 
@@ -28,7 +28,7 @@ bool bonus_collected(char** map, Bonus** bonuses,Frog* frog,int direction,int ma
 
 int chooseLevel();
 
-bool look_for_frog(Car*car,char**map);
+bool look_for_frog(Car*car,char**map,Frog*frog);
 
 void gameplay(char** map,char** pastmap, int max_cars,Car** cars, Frog* frog, int streets[],LevelConfig config,Bonus**bonuses,Player*player);
 
