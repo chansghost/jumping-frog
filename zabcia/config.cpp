@@ -69,3 +69,11 @@ int writeLevelConfig(FILE* file, int level, LevelConfig* config) {//only for tes
 int get_maxfriend(LevelConfig* config) {
     return config->max_friend;
 }
+
+void manage_config(LevelConfig* config, int level) {
+    const char* filename = "config.txt";
+    FILE* file = NULL;
+    fopen_s(&file, filename, "r");
+    read_lvl_config(file, level, config);
+    fclose(file);
+}

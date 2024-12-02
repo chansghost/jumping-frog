@@ -133,9 +133,9 @@
     <ClCompile Include="conio2.cpp" />
     <ClCompile Include="frog.cpp" />
     <ClCompile Include="gameplayy.cpp" />
+    <ClCompile Include="game_save.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
-    <ClCompile Include="memory_handling.cpp" />
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="Stork.cpp" />
@@ -148,9 +148,9 @@
     <ClInclude Include="defines.h" />
     <ClInclude Include="frog.h" />
     <ClInclude Include="gameplayy.h" />
+    <ClInclude Include="game_save.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="map.h" />
-    <ClInclude Include="memory_handling.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="Stork.h" />

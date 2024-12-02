@@ -5,4 +5,3 @@
 #include <time.h>
 #include "defines.h"
 
-#include "memory_handling.h"

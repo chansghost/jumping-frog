@@ -7,6 +7,19 @@ void initialize_player(Player* player) {
 
 }
 
+bool check_if_new(Player* player) {
+	printf("Czy chcesz wczytaæ star¹ rozgrywkê?\n");
+	printf("T - tak\n");
+	printf("N-nie\n");
+	char c;
+	c = getch();
+	if (c == 't') {
+		return true;
+	}
+	return false;
+
+}
+
 void new_player(Player* player) {
 	int x = MAP_WIDTH / 2;
 	int y = MAP_HEIGHT / 2;
@@ -15,10 +28,10 @@ void new_player(Player* player) {
 	int i = 0;
 	
 	for (int i = 0; i < MAX_NAME; i++) {
-		c = getch();  // getche() wyœwietla wpisywane znaki na bie¿¹co
+		c = getch();  
 		player->name[i] = c;
 		putch(c);
-		// Jeœli u¿ytkownik naciœnie 'q', koñczymy
+		
 		if (c=='\r') {
 			player->name_length = i;
 			return;

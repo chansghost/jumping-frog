@@ -21,23 +21,17 @@ int main() {
    // new_player(player);
 
     level = chooseLevel();
-
-    const char* filename = "config.txt";
     LevelConfig config;
-    FILE* file = NULL;
-    fopen_s(&file, filename, "r");
-    read_lvl_config(file, level, &config);
-    fclose(file);
+    manage_config(&config,level);
 
     int max_cars = config.max_friend + config.max_enemy;
 
-    
-    
     Car** cars = (Car**)malloc(max_cars * sizeof(Car*));
     for (int i = 0; i < max_cars; i++) {
         cars[i] = (Car*)malloc(sizeof(Car));
         reset_car(cars[i], NEW);
     }
+    
     Obstacle** obstacles = (Obstacle**)malloc(config.max_obstacles * sizeof(Obstacle*));
     for (int i = 0; i < config.max_obstacles; i++) {
         obstacles[i] = (Obstacle*)malloc(sizeof(Obstacle));
@@ -79,10 +73,13 @@ int main() {
     
     
 
-    free_memory(map, pastmap, max_cars);
-    for (int i = 0; i < max_cars; i++) {
-        free(cars[i]);
+    for (int i = 0; i < MAP_HEIGHT; i++) {
+        free(map[i]);
     }
-    free(cars);
+    free(map);
+    for (int i = 0; i < MAP_HEIGHT; i++) {
+        free(pastmap[i]);
+    }
+    free(pastmap);
     return 0;
 }

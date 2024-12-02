@@ -37,7 +37,7 @@ max_obstacles 16
 frog_jump 3
 frog_time 2
 max_stops 5
-bonuses 100
+bonuses 10
 bonus_time 10
 stork_spawn 10
 stork_speed 0.25

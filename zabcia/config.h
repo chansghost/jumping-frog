@@ -17,6 +17,8 @@ typedef struct {
     double stork_speed;
 }LevelConfig;
 
+void manage_config(LevelConfig* config,int level);
+
 void read_lvl_config(FILE* file, int level, LevelConfig* config);
 
 void printLevel(LevelConfig config,int level);
