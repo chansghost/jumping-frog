@@ -52,6 +52,13 @@ bool check_collision(char** map, Frog* frog, Car** cars, int max_cars,int x,int 
     
     return false;
 }
+bool check_jump_on_car(char** map, Frog* frog, Car** cars, int max_cars, int x, int y) {
+    if ((map[y][x] == FRIENDLY) || (map[y][x] ==ENEMY)) {
+        frog->dead = true;
+        return true;
+    }
+    return false;
+}
 
 bool look_for_frog(Car* car,char**map) {
     //vacinity is 2 fields all around
@@ -228,11 +235,11 @@ void jump(char** map, Frog* frog, int direction, Car** cars, int max_cars,int ma
             }
         }
         else if (!obstacle_check(map, x, y)) {
-            if (bonus_collected(map, bonuses, frog, direction, max_bonuses)){
+            if (bonus_collected(map, bonuses, frog, direction, max_bonuses)) {
                 player->points += 1;
                 move_frog(map, frog, x, y);
             }
-            else //if (!check_collision(map, frog, cars, max_cars, x, y)) 
+            else if (!check_jump_on_car(map, frog, cars, max_cars, x, y));
             {
                 move_frog(map, frog, x, y);
             }

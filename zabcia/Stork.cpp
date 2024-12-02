@@ -45,13 +45,13 @@ void move_stork(Stork* stork, int directionUPDOWN, int directionLEFTRIGHT) {
 	if (directionUPDOWN == DOWN) {
 		stork->y += stork->speed;
 	}
-	else {
+	else if(directionUPDOWN == UP){
 		stork->y -= stork->speed;
 	}
 	if (directionLEFTRIGHT == RIGHT) {
 		stork->x += stork->speed;
 	}
-	else {
+	else if(directionLEFTRIGHT ==LEFT) {
 		stork->x -= stork->speed;
 	}
 	

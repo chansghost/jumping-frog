@@ -2,7 +2,7 @@
 
 
 void initialize_frog(char** map, Frog* frog) {
-	frog->x = MAP_WIDTH-1;///chang
+	frog->x = 0;///chang
 	frog->y = (MAP_HEIGHT / 2);
 	//frog->y = 18;
 	frog->jump_distance = 0;
