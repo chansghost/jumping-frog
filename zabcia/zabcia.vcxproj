@@ -138,6 +138,7 @@
     <ClCompile Include="memory_handling.cpp" />
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="Stork.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bonus.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="memory_handling.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="Stork.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

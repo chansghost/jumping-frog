@@ -35,6 +35,10 @@ void colour_handling(char** map, int i, int j) {
         textcolor(MAGENTA);
         textbackground(MAGENTA);
     }
+    else if (map[i][j] == STORK) {
+        textcolor(LIGHTGRAY);
+        textbackground(LIGHTGRAY);
+    }
 }
 
 void update_past_map(char** pastmap, char** map) {

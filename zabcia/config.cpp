@@ -16,6 +16,8 @@ void read_lvl_config(FILE* file, int level, LevelConfig* config) {
                 fscanf_s(file, " max_stops %d", &config->max_stops);
                 fscanf_s(file, " bonuses %d", &config->bonuses);
                 fscanf_s(file, " bonus_time %d", &config->bonus_time);
+                fscanf_s(file, " stork_spawn %d", &config->stork_spawn);
+                fscanf_s(file, " stork_speed %d", &config->stork_speed);
 
                 fscanf_s(file, " stork %5s", first_char, sizeof(first_char)); 
 

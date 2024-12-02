@@ -278,7 +278,36 @@ int chooseLevel() {
     }
 }
 
-void gameplay(char** map, char** pastmap, int max_cars,Car** cars, Frog* frog, int streets[], LevelConfig config, Bonus** bonuses, Player* player){
+
+
+void fly_stork(Stork* stork, Frog* frog, char** map) {
+    if (stork->exists) {
+        int x, y;
+        int directionUPDOWN = 0, directionLEFTRIGHT = 0;//might not need to move vertically, hence 0 (in defines,
+        //directions range from 1-4)
+        x = frog->x;
+        y = frog->y;
+        if (x > stork->x) {
+            directionLEFTRIGHT = RIGHT;
+        }
+        else if (x < stork->x) {
+            directionLEFTRIGHT = LEFT;
+        }
+        if (y > stork->y) {
+            directionUPDOWN = DOWN;
+        }
+        else if (y < stork->y) {
+            directionUPDOWN = UP;
+        }
+        render_stork(map, stork, REMOVE);
+        move_stork(stork, directionUPDOWN, directionLEFTRIGHT);
+        if (frog_caught(stork, map)) frog->dead = true;
+        update_map_piece(stork, map);
+        render_stork(map, stork, ADD);
+    }
+}
+
+void gameplay(char** map, char** pastmap, int max_cars,Car** cars, Frog* frog, int streets[], LevelConfig config, Bonus** bonuses, Player* player, Stork* stork){
     int key;
     bool quit = false;
     time_t start = time(NULL);
@@ -315,6 +344,7 @@ void gameplay(char** map, char** pastmap, int max_cars,Car** cars, Frog* frog, i
             if (frog->dead) break;
             move_car(map, cars, i, max_cars, frog, streets, config.max_speed);
         }
+        fly_stork(stork, frog, map);
         if (time(NULL) - start > config.frog_time) {
             frog->dead = true;
         }
@@ -324,12 +354,16 @@ void gameplay(char** map, char** pastmap, int max_cars,Car** cars, Frog* frog, i
         }
         newtime = time(NULL);
         passed = difftime(newtime, timer);
-        ranking(player,passed);
+        ranking(player, passed);
+        if (config.stork) {
+            spawn_stork(stork, passed, map);
+        }
+        
         print_map(map, pastmap);
     }
 }
 
-void game(char** map,char**basemap, char** pastmap, Car** cars, LevelConfig config, Frog* frog,Obstacle**obstacles,Bonus**bonuses,Player*player) {
+void game(char** map,char**basemap, char** pastmap, Car** cars, LevelConfig config, Frog* frog,Obstacle**obstacles,Bonus**bonuses,Player*player, Stork* stork) {
     int max_cars = config.max_enemy + config.max_friend;
     int sidewalks[SIDEWALKS];
     int street_numbers[STREETS];
@@ -341,6 +375,8 @@ void game(char** map,char**basemap, char** pastmap, Car** cars, LevelConfig conf
     update_map(map, frog->x, frog->y, frog->symbol);
     print_map(map, pastmap);
     frog->jump_distance = config.frog_jump;
-    gameplay(map, pastmap,max_cars, cars, frog, street_numbers,config,bonuses,player);
+    stork->time_spawn = config.stork_spawn;
+    stork->speed = config.stork_speed;
+    gameplay(map, pastmap,max_cars, cars, frog, street_numbers,config,bonuses,player,stork);
 
 }

@@ -13,6 +13,8 @@ typedef struct {
     int max_stops;
     int bonuses;
     int bonus_time;
+    int stork_spawn;
+    int stork_speed;
 }LevelConfig;
 
 void read_lvl_config(FILE* file, int level, LevelConfig* config);

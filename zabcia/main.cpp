@@ -7,6 +7,7 @@
 #include "includes.h"
 #include "bonus.h"
 #include "player.h"
+#include "stork.h"
 #define _CRT_SECURE_NO_WARNINGS
 
 int main() {
@@ -67,9 +68,12 @@ int main() {
     Frog* frog = (Frog*)malloc(sizeof(Frog));
     initialize_frog(map, frog);
 
+    Stork* stork = (Stork*)malloc(sizeof(stork));
+    initialize_stork(stork);
+
     
     
-    game(map, basemap, pastmap, cars, config, frog, obstacles,bonuses,player);
+    game(map, basemap, pastmap, cars, config, frog, obstacles,bonuses,player,stork);
 
     
     

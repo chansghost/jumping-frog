@@ -7,6 +7,7 @@
 #include "config.h"
 #include "bonus.h"
 #include "player.h"
+#include "stork.h"
 
 void frog_on_car(char** map, Frog* frog, Car* car);
 
@@ -30,6 +31,10 @@ int chooseLevel();
 
 bool look_for_frog(Car*car,char**map,Frog*frog);
 
-void gameplay(char** map,char** pastmap, int max_cars,Car** cars, Frog* frog, int streets[],LevelConfig config,Bonus**bonuses,Player*player);
 
-void game(char** map, char**basemap,char** pastmap, Car** cars, LevelConfig config, Frog* frog,Obstacle**obstacles,Bonus**bonuses,Player*player);
+
+void fly_stork(Stork* stork, Frog* frog, char** map);
+
+void gameplay(char** map,char** pastmap, int max_cars,Car** cars, Frog* frog, int streets[],LevelConfig config,Bonus**bonuses,Player*player,Stork*stork);
+
+void game(char** map, char**basemap,char** pastmap, Car** cars, LevelConfig config, Frog* frog,Obstacle**obstacles,Bonus**bonuses,Player*player, Stork* stork);

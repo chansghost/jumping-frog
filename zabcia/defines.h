@@ -17,5 +17,8 @@
 #define BONUS 'B'
 #define MAX_NAME 20
 #define EMPTY ' '
-
+#define STORK 'S'
+#define STORK_SIZE 2
+#define FRIENDLY 'F'
+#define ENEMY 'E'
 
