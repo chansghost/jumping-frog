@@ -5,16 +5,17 @@
 
 typedef struct {
 	int x, y;
-	int speed;
+	double speed;//can only be the multiplicity of 1/2
 	double time_spawn;//stork spawns after x seconds within starting the game
 	char symbol;
 	bool exists;
 	char map_piece[STORK_SIZE*2];
+	double gained_speed;//variable to control speed if it's below 1
 }Stork;
 
 void initialize_stork(Stork* stork);
 
-void spawn_stork(Stork* stork, int time, char** map);
+void spawn_stork(Stork* stork, double time, char** map);
 
 void move_stork(Stork* stork, int direction, int direction2);
 

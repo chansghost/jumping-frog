@@ -5,12 +5,12 @@ minimum_cars 7
 max_speed 2
 max_obstacles 5
 frog_jump 2
-frog_time 3
+frog_time 30
 max_stops 7
 bonuses 10
 bonus_time 10
-stork_spawn 10
-stork_speed 1
+stork_spawn 5
+stork_speed 0.25
 stork true
 
 level 1
@@ -40,7 +40,7 @@ max_stops 5
 bonuses 100
 bonus_time 10
 stork_spawn 10
-stork_speed 1
+stork_speed 0.25
 stork true
 
 level 3
@@ -50,10 +50,10 @@ minimum_cars 10
 max_speed 4
 max_obstacles 19
 frog_jump 2
-frog_time 30
+frog_time 1
 max_stops 10
 bonuses 10
 bonus_time 10
 stork_spawn 10
-stork_speed 1
+stork_speed 0.5
 stork false

@@ -29,7 +29,7 @@ bool bonus_collected(char** map, Bonus** bonuses,Frog* frog,int direction,int ma
 
 int chooseLevel();
 
-bool look_for_frog(Car*car,char**map,Frog*frog);
+bool look_for_frog(Car*car,char**map);
 
 
 

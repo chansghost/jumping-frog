@@ -186,11 +186,11 @@ bool bonus_collected(char** map, Bonus** bonuses,Frog* frog,int direction,int ma
 
 
 void try_on_car(char** map, Frog* frog,Car** cars, int max_cars) {
-    int x = frog->x - 1;//checking all over car
-    int y = (frog->y) - 1;
+    int x = frog->x - 2;//checking all over car
+    int y = (frog->y) - 2;
     int index;
-    for (int i = 0; i < CAR_SIZE; i++) {//x
-        for (int j = 0; j < CAR_SIZE; j++) {//y
+    for (int i = 0; i < CAR_SIZE*2; i++) {//x
+        for (int j = 0; j < CAR_SIZE*2; j++) {//y
             if ((y + i) < MAP_HEIGHT && (y - 1) > 0) {
                 if (map[y + i][x + j] == 'F') {
                     check_collision(map, frog, cars, max_cars, x + j, y + i);
@@ -289,28 +289,34 @@ int chooseLevel() {
 
 void fly_stork(Stork* stork, Frog* frog, char** map) {
     if (stork->exists) {
-        int x, y;
-        int directionUPDOWN = 0, directionLEFTRIGHT = 0;//might not need to move vertically, hence 0 (in defines,
-        //directions range from 1-4)
-        x = frog->x;
-        y = frog->y;
-        if (x > stork->x) {
-            directionLEFTRIGHT = RIGHT;
+        if (stork->speed >= 1 || stork->gained_speed >= 1) {
+            int x, y;
+            int directionUPDOWN = 0, directionLEFTRIGHT = 0;//might not need to move vertically, hence 0 (in defines,
+            //directions range from 1-4)
+            x = frog->x;
+            y = frog->y;
+            if (x > stork->x) {
+                directionLEFTRIGHT = RIGHT;
+            }
+            else if (x < stork->x) {
+                directionLEFTRIGHT = LEFT;
+            }
+            if (y > stork->y) {
+                directionUPDOWN = DOWN;
+            }
+            else if (y < stork->y) {
+                directionUPDOWN = UP;
+            }
+            render_stork(map, stork, REMOVE);
+            move_stork(stork, directionUPDOWN, directionLEFTRIGHT);
+            if (frog_caught(stork, map)) frog->dead = true;
+            update_map_piece(stork, map);
+            render_stork(map, stork, ADD);
+            stork->gained_speed = stork->speed;
         }
-        else if (x < stork->x) {
-            directionLEFTRIGHT = LEFT;
+        else {
+            stork->gained_speed+=stork->speed;
         }
-        if (y > stork->y) {
-            directionUPDOWN = DOWN;
-        }
-        else if (y < stork->y) {
-            directionUPDOWN = UP;
-        }
-        render_stork(map, stork, REMOVE);
-        move_stork(stork, directionUPDOWN, directionLEFTRIGHT);
-        if (frog_caught(stork, map)) frog->dead = true;
-        update_map_piece(stork, map);
-        render_stork(map, stork, ADD);
     }
 }
 
@@ -350,21 +356,26 @@ void gameplay(char** map, char** pastmap, int max_cars,Car** cars, Frog* frog, i
         for (int i = 0; i < max_cars; i++) {
             if (frog->dead) break;
             move_car(map, cars, i, max_cars, frog, streets, config.max_speed);
+            render_stork(map, stork, ADD);//so that the cars don't cover up the stork
         }
+        newtime = time(NULL);
+        passed = difftime(newtime, timer);
+
+        if (config.stork && !(stork->exists)) {
+            spawn_stork(stork, passed, map);
+        }
+        ranking(player, passed);
+        
         fly_stork(stork, frog, map);
-        if (time(NULL) - start > config.frog_time) {
+        /*if (time(NULL) - start > config.frog_time) {
             frog->dead = true;
-        }
+        }*/
         if (frog->dead) {
             quit = true;
             cputs("GAME OVERRRRRRRRR");
         }
-        newtime = time(NULL);
-        passed = difftime(newtime, timer);
-        ranking(player, passed);
-        if (config.stork) {
-            spawn_stork(stork, passed, map);
-        }
+        
+        
         
         print_map(map, pastmap);
     }
@@ -384,6 +395,7 @@ void game(char** map,char**basemap, char** pastmap, Car** cars, LevelConfig conf
     frog->jump_distance = config.frog_jump;
     stork->time_spawn = config.stork_spawn;
     stork->speed = config.stork_speed;
+    stork->gained_speed = config.stork_speed;
     gameplay(map, pastmap,max_cars, cars, frog, street_numbers,config,bonuses,player,stork);
 
 }

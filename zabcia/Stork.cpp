@@ -11,8 +11,8 @@ void initialize_stork(Stork* stork) {
 	}
 }
 
-void spawn_stork(Stork* stork, int time,char**map) {
-	if (time == stork->time_spawn) {
+void spawn_stork(Stork* stork, double time,char**map) {
+	if (time >= stork->time_spawn) {
 		stork->x = 1;//stork always spawns on the top right corner
 		stork->y = 1;
 		
@@ -42,17 +42,18 @@ bool frog_caught(Stork* stork, char** map) {
 }
 
 void move_stork(Stork* stork, int directionUPDOWN, int directionLEFTRIGHT) {
+
 	if (directionUPDOWN == DOWN) {
-		stork->y += stork->speed;
+		stork->y += 1;
 	}
 	else if(directionUPDOWN == UP){
-		stork->y -= stork->speed;
+		stork->y -= 1;
 	}
 	if (directionLEFTRIGHT == RIGHT) {
-		stork->x += stork->speed;
+		stork->x += 1;
 	}
 	else if(directionLEFTRIGHT ==LEFT) {
-		stork->x -= stork->speed;
+		stork->x -= 1;
 	}
 	
 }
