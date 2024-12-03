@@ -11,4 +11,6 @@ typedef struct {
 
 void initialize_obstacle(Obstacle* obstacle);
 
+void render_obstacles(Obstacle** obstacles, char** map, int max_obstacles);
+
 void generate_obstacles(Obstacle** obstacles, int sidewalks[], char** map, int max_obstacles);

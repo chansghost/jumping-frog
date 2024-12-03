@@ -1,12 +1,11 @@
 #include "frog.h"
 
 
-void initialize_frog(char** map, Frog* frog) {
+void initialize_frog( Frog* frog) {
 	frog->x = 0;///chang
 	frog->y = (MAP_HEIGHT / 2);
 	//frog->y = 18;
 	frog->jump_distance = 0;
-	frog->lives = 1;
 	frog->symbol = '@';
 	frog->map_piece = ' ';//pocz¹tkowy slot ¿aby
 	frog->car_index = -1;

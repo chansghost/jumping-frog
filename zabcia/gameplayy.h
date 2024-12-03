@@ -8,6 +8,7 @@
 #include "bonus.h"
 #include "player.h"
 #include "stork.h"
+#include "game_save.h"
 
 void frog_on_car(char** map, Frog* frog, Car* car);
 
@@ -29,12 +30,16 @@ bool bonus_collected(char** map, Bonus** bonuses,Frog* frog,int direction,int ma
 
 int chooseLevel();
 
+bool check_if_new();
+
 bool look_for_frog(Car*car,char**map);
 
+void start();
 
+//void begin(int sidewalks[], int street_numbers[],char**map,char**basemap,char**pastmap);
 
 void fly_stork(Stork* stork, Frog* frog, char** map);
 
-void gameplay(char** map,char** pastmap, int max_cars,Car** cars, Frog* frog, int streets[],LevelConfig config,Bonus**bonuses,Player*player,Stork*stork);
+void gameplay(char** map,char** pastmap, int max_cars,Car** cars, Frog* frog, int streets[],LevelConfig config,Bonus**bonuses,Player*player,Stork*stork,Obstacle**obstacles);
 
 void game(char** map, char**basemap,char** pastmap, Car** cars, LevelConfig config, Frog* frog,Obstacle**obstacles,Bonus**bonuses,Player*player, Stork* stork);

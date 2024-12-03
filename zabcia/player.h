@@ -13,7 +13,7 @@ typedef struct {
 
 void initialize_player(Player*player);
 
-bool check_if_new(Player* player);
+void add_log(char* text);
 
 void new_player(Player* player);
 

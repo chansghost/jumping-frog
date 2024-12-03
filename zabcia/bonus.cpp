@@ -5,6 +5,7 @@ void initialize_bonus(Bonus* bonus) {
 	bonus->y = -1;
 	bonus->collected = false;
 	bonus->symbol = BONUS;
+	bonus->disappeared = false;
 
 }
 
@@ -37,5 +38,11 @@ void collect_bonus(Bonus** bonuses, int x, int y,int max_bonus,char**map) {
 			update_map(map, x, y, EMPTY);
 			return;
 		}
+	}
+}
+
+void render_bonuses(Bonus** bonuses, char** map, int max_bonuses) {
+	for (int i = 0; i < max_bonuses; i++) {
+		update_map(map, bonuses[i]->x, bonuses[i]->y, bonuses[i]->symbol);
 	}
 }

@@ -30,3 +30,9 @@ void generate_obstacles(Obstacle** obstacles, int sidewalks[], char** map, int m
 	
 	
 }
+
+void render_obstacles(Obstacle** obstacles, char** map, int max_obstacles) {
+	for (int i = 0; i < max_obstacles; i++) {
+		update_map(map, obstacles[i]->x, obstacles[i]->y, obstacles[i]->symbol);
+	}
+}

@@ -33,3 +33,4 @@ bool check_for_cars(char** map, Car** cars, int max_cars, int index);
 
 void generate_all_cars(Car** cars, char** map, int streets[], LevelConfig config);
 
+void render_all_cars(char** map, Car** cars, LevelConfig config);

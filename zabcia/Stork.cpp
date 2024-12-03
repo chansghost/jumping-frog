@@ -9,6 +9,8 @@ void initialize_stork(Stork* stork) {
 	for (int i = 0; i < STORK_SIZE*2; i++) {
 		stork->map_piece[i] = EMPTY;
 	}
+	stork->gained_speed = 0;
+	stork->speed = 0;
 }
 
 void spawn_stork(Stork* stork, double time,char**map) {

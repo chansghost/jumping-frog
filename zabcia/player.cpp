@@ -7,18 +7,7 @@ void initialize_player(Player* player) {
 
 }
 
-bool check_if_new(Player* player) {
-	printf("Czy chcesz wczytaæ star¹ rozgrywkê?\n");
-	printf("T - tak\n");
-	printf("N-nie\n");
-	char c;
-	c = getch();
-	if (c == 't') {
-		return true;
-	}
-	return false;
 
-}
 
 void new_player(Player* player) {
 	int x = MAP_WIDTH / 2;
@@ -62,4 +51,9 @@ void ranking(Player*player,double timer) {
 	gotoxy(x, y);
 	printf("%.1f", timer);
 
+}
+void add_log(char* text) {
+	int x = (MAP_WIDTH + MAP_WIDTH / 4);
+	int y = (MAP_HEIGHT / 2);
+	gotoxy(x, y);
 }

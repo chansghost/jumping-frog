@@ -6,7 +6,6 @@
 typedef struct {
 	int x, y;
 	int jump_distance;
-	int lives;
 	char symbol;
 	char map_piece;
 	int car_index;
@@ -20,7 +19,7 @@ bool frog_within_bounds(int x, int y);
 
 
 
-void initialize_frog(char**map,Frog* frog);
+void initialize_frog(Frog* frog);
 
 void move_frog(char** map, Frog* frog,int x,int y);
 

@@ -61,6 +61,9 @@ void reset_car(Car* car, bool friendly,int x,int direction,int street_number,boo
     car->speed = 0;
     car->direction=direction;
     car->stops = stops;
+    if (street_number == -1) {//if not used
+        car->respawn = -1;
+    }
 
 }
 
@@ -184,16 +187,24 @@ void generate_all_cars(Car** cars, char** map, int streets[],LevelConfig config)
                     stop = false;
                 }
                 generate_car(cars[i], map, true, streets, config.max_speed, stop);
-                cars[i]->car_id = i;
+                //cars[i]->car_id = i;
                 stops++;
             }
         }
         if (config.max_enemy > 0) {//purely for projects presentation purpouses
             for (int i = 0; i < enemy_cars; i++) {
                 generate_car(cars[i + friendly_cars], map, false, streets, config.max_speed);
-                cars[i + friendly_cars]->car_id = i + friendly_cars;
+                //cars[i + friendly_cars]->car_id = i + friendly_cars;
             }
         }
     }
 }
 
+void render_all_cars(char** map, Car** cars,LevelConfig config) {
+    int max_cars = config.max_enemy + config.max_friend;
+    for (int i = 0; i < max_cars; i++) {
+        if (cars[i]->x != -1) {//if car was generated
+            render_car(map, cars[i], ADD);
+        }
+    }
+}
