@@ -20,7 +20,7 @@ minimum_cars 7
 max_speed 3
 max_obstacles 10
 frog_jump 3
-frog_time 2
+frog_time 3
 max_stops 6
 bonuses 10
 bonus_time 10

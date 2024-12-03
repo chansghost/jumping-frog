@@ -52,8 +52,30 @@ void ranking(Player*player,double timer) {
 	printf("%.1f", timer);
 
 }
-void add_log(char* text) {
+void add_log(char text[]) {
 	int x = (MAP_WIDTH + MAP_WIDTH / 4);
-	int y = (MAP_HEIGHT / 2);
+	int y = (MAP_HEIGHT / 2)+10;//10 because i just simply thought so,it looks nice there
 	gotoxy(x, y);
+	cputs(text);
+}
+
+int winning_logs(Player* player) {
+	clrscr();
+	cputs("You won\n");
+	if (player->level < 3) {
+		char c;
+		cputs("Do you wish to go to the next level?\n");
+		cputs("Y-yes\n");
+		cputs("N-no\n");
+		c= getch();
+		if (c == 'y') {
+			return 1;
+		}
+	
+		return 0;
+	}
+	else {
+		cputs("You finished the highest level of the game. Congratulations!\n");
+		return -1;
+	}
 }

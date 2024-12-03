@@ -13,7 +13,9 @@ typedef struct {
 
 void initialize_player(Player*player);
 
-void add_log(char* text);
+void add_log(char text[]);
+
+int winning_logs(Player* player);
 
 void new_player(Player* player);
 

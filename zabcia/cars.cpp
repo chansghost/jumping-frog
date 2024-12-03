@@ -158,11 +158,11 @@ void generate_car(Car* car, char** map, bool friendly, int streets[], int max_sp
 
     if (friendly) {
         car->friendly = true;
-        car->symbol = 'F';
+        car->symbol = FRIENDLY;
     }
     else {
         car->friendly = false;
-        car->symbol = 'E';
+        car->symbol = ENEMY;
     }
     int random_speed = (rand() % (max_speed - 1)) + 1;
     car->speed = random_speed;

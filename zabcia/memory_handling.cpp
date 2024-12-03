@@ -45,3 +45,50 @@ void initialize_memory(
     *frog = (Frog*)malloc(sizeof(Frog));
     initialize_frog(*frog);
 }
+
+void free_memo(Car*** cars,
+    Obstacle*** obstacles,
+    Bonus*** bonuses, Frog** frog, Stork** stork, LevelConfig config) {
+    int max_cars = config.max_enemy + config.max_friend;
+    
+    for (int i = 0; i < max_cars; i++) {
+        free((*cars)[i]); 
+    }
+    free(*cars); 
+
+    for (int i = 0; i < config.max_obstacles; i++) {
+        free((*obstacles)[i]); 
+    }
+    free(*obstacles); 
+
+    for (int i = 0; i < config.bonuses; i++) {
+        free((*bonuses)[i]);  
+    }
+    free(*bonuses);  
+
+    free(*stork); 
+
+    free(*frog);  
+
+}
+
+void free_map(char** map, char** basemap, char** pastmap) {
+    // Zwalnianie pamiêci dla basemap
+    for (int i = 0; i < MAP_HEIGHT; i++) {
+        free((basemap)[i]); 
+    }
+    free(*basemap);  
+
+
+    for (int i = 0; i < MAP_HEIGHT; i++) {
+        free((map)[i]);  
+    }
+    free(*map);  
+
+    // Zwalnianie pamiêci dla pastmap
+    for (int i = 0; i < MAP_HEIGHT; i++) {
+        free((pastmap)[i]);  
+    }
+    free(*pastmap);  
+
+}
