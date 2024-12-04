@@ -4,6 +4,7 @@ void initialize_player(Player* player) {
 	player->points=0;
 	player->won = false;
 	player->level = 0;
+	player->log = false;
 
 }
 
@@ -15,7 +16,7 @@ void new_player(Player* player) {
 	char c;
 	char nowe;
 	int i = 0;
-	
+	cputs("Please enter your name: ");
 	for (int i = 0; i < MAX_NAME; i++) {
 		c = getch();  
 		player->name[i] = c;
@@ -30,8 +31,9 @@ void new_player(Player* player) {
 }
 
 void ranking(Player*player,double timer) {
-	int x = (MAP_WIDTH+MAP_WIDTH/4);
-	int y = MAP_HEIGHT / 2;
+	int x = (MAP_WIDTH + MAP_WIDTH / 4);
+	int y = (MAP_HEIGHT / 2);
+	
 	gotoxy(x, y);
 	y++;
 	cputs(" Ranking:\n");
@@ -41,6 +43,7 @@ void ranking(Player*player,double timer) {
 	}
 	y++;
 	gotoxy(x, y);
+	Name:
 	cputs("Points: ");
 	x += 1;
 	y++;
@@ -52,11 +55,16 @@ void ranking(Player*player,double timer) {
 	printf("%.1f", timer);
 
 }
-void add_log(char text[]) {
+void add_log(char text[],Player*player) {
+	char clear[] = "                            ";
+	if (player->log) {
+		cputs(clear);
+	}
 	int x = (MAP_WIDTH + MAP_WIDTH / 4);
 	int y = (MAP_HEIGHT / 2)+10;//10 because i just simply thought so,it looks nice there
 	gotoxy(x, y);
 	cputs(text);
+	player->log = true;
 }
 
 int winning_logs(Player* player) {

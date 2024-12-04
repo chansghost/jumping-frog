@@ -35,6 +35,7 @@ bool check_if_new();
 bool look_for_frog(Car*car,char**map);
 
 void start();
+void load_game(char** map, char** pastmap, char** basemap, Car** cars, Frog* frog, Bonus** bonuses, Obstacle** obstacles, Player* player, Stork* stork, LevelConfig config);
 
 //void begin(int sidewalks[], int street_numbers[],char**map,char**basemap,char**pastmap);
 

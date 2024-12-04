@@ -9,11 +9,12 @@ typedef struct {
 	bool won;
 	int level;
 	int name_length;
+	bool log;
 }Player;
 
 void initialize_player(Player*player);
 
-void add_log(char text[]);
+void add_log(char text[], Player* player);
 
 int winning_logs(Player* player);
 

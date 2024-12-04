@@ -244,14 +244,14 @@ void jump(char** map, Frog* frog, int direction, Car** cars, int max_cars,int ma
                 move_frog(map, frog, x, y);
             }
         }
-        else cputs("nie wolno!!!!!!!!");
+        
         frog->jumping = false;
         
     }
     else if(x>=MAP_WIDTH){
         player->won = true;
         char text[] = "You won";
-        add_log(text);
+        add_log(text,player);
     }
 }
 
@@ -329,9 +329,10 @@ void gameplay(char** map, char** pastmap, int max_cars,Car** cars, Frog* frog, i
     time_t timer = time(NULL);
     time_t newtime = time(NULL);
     double passed;
-    char clear[] = "                            ";
+    double frog_move;
+    
     while (!quit) {//koniec lvl pozniej tu trzeba wsadzic
-        
+        newtime = time(NULL);
         if (kbhit()) {
             key = getch();
             start = time(NULL);
@@ -361,27 +362,32 @@ void gameplay(char** map, char** pastmap, int max_cars,Car** cars, Frog* frog, i
                 break;
             }
         }
-        add_log(clear);
+        
+        
+        passed = difftime(newtime, timer);
+        frog_move = difftime(newtime, start);
         for (int i = 0; i < max_cars; i++) {
             if (frog->dead) break;
             move_car(map, cars, i, max_cars, frog, streets, config.max_speed);
             render_stork(map, stork, ADD);//so that the cars don't cover up the stork
         }
-        newtime = time(NULL);
-        passed = difftime(newtime, timer);
+        
 
         if (config.stork && !(stork->exists)) {
             spawn_stork(stork, passed, map);
-            
+            if (stork->exists) {
+                char text[] = "Stork spawned";
+                add_log(text,player);
+            }
         }
         ranking(player, passed);
         fly_stork(stork, frog, map);
-        if (time(NULL) - start > config.frog_time) {
+        if (frog_move > config.frog_time) {
             frog->dead = true;
         }
         if (frog->dead) {
             char text[] = "You lost";
-            add_log(text);
+            add_log(text,player);
             quit = true;
         }
         if (player->won) {
@@ -425,10 +431,25 @@ bool check_if_new() {
 }
 
 
-
-void start() {
+void load_game(char** map, char** pastmap, char** basemap, Car** cars, Frog* frog, Bonus** bonuses, Obstacle** obstacles, Player* player, Stork* stork, LevelConfig config) {
     int sidewalks[SIDEWALKS];
     int street_numbers[STREETS];
+    
+    int max_cars = config.max_enemy + config.max_friend;
+    base_map(map, street_numbers, basemap, sidewalks);
+    render_all_cars(map, cars, config);
+    render_stork(map, stork, ADD);
+    render_obstacles(obstacles, map, config.max_obstacles);
+    render_bonuses(bonuses, map, config.bonuses);
+    update_map(map, frog->x, frog->y, FROG);
+    print_map(map, pastmap);
+    gameplay(map, pastmap, max_cars, cars, frog, street_numbers, config, bonuses, player, stork, obstacles);
+
+}
+
+
+void start() {
+    
     int level;
     Player* player = (Player*)malloc(sizeof(Player));
     initialize_player(player);
@@ -444,6 +465,7 @@ void start() {
     Frog* frog;
     LevelConfig config;
     if (!check_if_new()) {
+        new_player(player);
         level = chooseLevel();
         player->level = level;
         manage_config(&config, level);
@@ -451,26 +473,22 @@ void start() {
         game(map, basemap, pastmap, cars, config, frog, obstacles, bonuses, player, stork);
     }
     else {
-        load_game_state(&cars, &obstacles, &bonuses, &frog, &stork, player, &config);
-        int max_cars = config.max_enemy + config.max_friend;
-        base_map(map, street_numbers, basemap, sidewalks);
-        render_all_cars(map, cars, config);
-        render_stork(map, stork, ADD);
-        render_obstacles(obstacles, map, config.max_obstacles);
-        render_bonuses(bonuses, map, config.bonuses);
-        update_map(map, frog->x, frog->y, FROG);
-        print_map(map, pastmap);
-        gameplay(map, pastmap, max_cars, cars, frog, street_numbers, config, bonuses, player, stork, obstacles);
+        read_game_state(&cars, &obstacles, &bonuses, &frog, &stork, player, &config);
+        load_game(map, pastmap, basemap, cars, frog, bonuses, obstacles, player, stork, config);
     }
+    
     if (player->won) {
         int nxt = winning_logs(player);
         if (nxt == 1) {
             clrscr();
-            free_memo(&cars, &obstacles, &bonuses, &frog, &stork, config);
+            free_memo(cars, obstacles, bonuses, frog, stork, config);
+            free_map(map, basemap, pastmap);
             level += 1;
             player->level = level;
+            player->won = false;
             manage_config(&config, level);
             initialize_memory(&cars, &obstacles, &bonuses, &frog, &stork, config);
+            initialize_map(&basemap, &map, &pastmap);
             game(map, basemap, pastmap, cars, config, frog, obstacles, bonuses, player, stork);
         }
         else {

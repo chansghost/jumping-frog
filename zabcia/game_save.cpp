@@ -39,7 +39,7 @@ void save_game_state(Car** cars,Obstacle** obstacles,Bonus** bonuses, Frog* frog
     fclose(file);
 }
 
-void load_game_state(Car*** cars, Obstacle*** obstacles, Bonus*** bonuses, Frog** frog, Stork** stork, Player* player, LevelConfig* config) {
+void read_game_state(Car*** cars, Obstacle*** obstacles, Bonus*** bonuses, Frog** frog, Stork** stork, Player* player, LevelConfig* config) {
     const char* filename = "save.txt";
     FILE* file = NULL;
     fopen_s(&file, filename, "rb");

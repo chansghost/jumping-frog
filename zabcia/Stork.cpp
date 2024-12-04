@@ -23,8 +23,7 @@ void spawn_stork(Stork* stork, double time,char**map) {
 		update_map_piece(stork, map);
 		render_stork(map, stork, ADD);
 		stork->exists = true;
-		char text[] = "Stork spawned";
-		add_log(text);
+		
 	}
 	
 }

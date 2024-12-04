@@ -18,8 +18,8 @@ void initialize_memory(
     Obstacle*** obstacles,
     Bonus*** bonuses,Frog**frog, Stork** stork, LevelConfig config);
 
-void free_memo(Car*** cars,
-    Obstacle*** obstacles,
-    Bonus*** bonuses, Frog** frog, Stork** stork, LevelConfig config);
+void free_memo(Car** cars,
+    Obstacle** obstacles,
+    Bonus** bonuses, Frog* frog, Stork* stork, LevelConfig config);
 
 void free_map(char** map, char** basemap, char** pastmap);
