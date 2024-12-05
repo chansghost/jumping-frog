@@ -1,7 +1,22 @@
 #include "game_save.h"
 
 void save_game_state(Car** cars,Obstacle** obstacles,Bonus** bonuses, Frog* frog, Stork* stork, Player* player, LevelConfig config) {
-    const char* filename = "save.txt";
+    char c;
+    char filename[MAX_NAME];
+    printf("Enter the filename (max %d characters): ", MAX_NAME);
+
+    
+    for (int i = 0; i < MAX_NAME; i++) {
+        c = getch(); 
+        if (c == '\r' || c == '\n') {  
+            filename[i] = '\0';   
+            break;                 
+        }
+        else {
+            filename[i] = c;      
+            putch(c);               
+        }
+    }
     FILE* file = NULL;
     fopen_s(&file, filename, "wb");
     if (!file) {
@@ -37,10 +52,39 @@ void save_game_state(Car** cars,Obstacle** obstacles,Bonus** bonuses, Frog* frog
     fwrite(stork, sizeof(Stork), 1, file);
 
     fclose(file);
+
+    FILE* ranking_file = NULL;
+    fopen_s(&ranking_file, "ranking.txt", "a");
+    if (!ranking_file) {
+        perror("Cannot open ranking file");
+        return;
+    }
+
+    // Zapisujemy nazwê gracza i jego punkty
+    fprintf(ranking_file, "%s %d\n", player->name, player->points);
+
+    fclose(ranking_file);
 }
 
 void read_game_state(Car*** cars, Obstacle*** obstacles, Bonus*** bonuses, Frog** frog, Stork** stork, Player* player, LevelConfig* config) {
-    const char* filename = "save.txt";
+    char c;
+    char filename[MAX_NAME];
+    printf("Enter the filename (max %d characters): ", MAX_NAME);
+
+    // Wczytujemy nazwê pliku znak po znaku
+    for (int i = 0; i < MAX_NAME; i++) {
+        c = getch();  // Oczekujemy na wciœniêcie klawisza przez u¿ytkownika
+        if (c == '\r' || c == '\n') {  // Je¿eli naciœniêto Enter (powrót karetki)
+            filename[i] = '\0';    // Koñczymy ³añcuch znaków
+            break;                 // Koñczymy wczytywanie
+        }
+        else {
+            filename[i] = c;       // Zapisujemy wprowadzone znaki
+            putch(c);               // Wyœwietlamy je na ekranie
+        }
+    }
+
+    
     FILE* file = NULL;
     fopen_s(&file, filename, "rb");
     if (!file) {

@@ -35,9 +35,16 @@ bool check_if_new();
 bool look_for_frog(Car*car,char**map);
 
 void start();
+
+int player_moved(char** map, Frog* frog, Car** cars, int max_cars, Bonus** bonuses, Player* player,Stork*stork,Obstacle**obstacles, LevelConfig config);
+
+void stork_management(Stork* stork, Player* player, int time,char**map,Frog*frog, LevelConfig config);
+
+bool frog_lives(Frog* frog, LevelConfig config, Player* player, int time);
+
 void load_game(char** map, char** pastmap, char** basemap, Car** cars, Frog* frog, Bonus** bonuses, Obstacle** obstacles, Player* player, Stork* stork, LevelConfig config);
 
-//void begin(int sidewalks[], int street_numbers[],char**map,char**basemap,char**pastmap);
+void next_level(char** map, char** pastmap, char** basemap, Car** cars, Frog* frog, Bonus** bonuses, Obstacle** obstacles, Player* player, Stork* stork, LevelConfig config);
 
 void fly_stork(Stork* stork, Frog* frog, char** map);
 

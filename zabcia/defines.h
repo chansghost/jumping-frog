@@ -27,4 +27,8 @@
 
 #define STORK_SIZE 2
 
+#define MOVED 1
+#define QUIT 2
+#define STILL 0
+
 
