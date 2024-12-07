@@ -43,6 +43,8 @@ void collect_bonus(Bonus** bonuses, int x, int y,int max_bonus,char**map) {
 
 void render_bonuses(Bonus** bonuses, char** map, int max_bonuses) {
 	for (int i = 0; i < max_bonuses; i++) {
-		update_map(map, bonuses[i]->x, bonuses[i]->y, bonuses[i]->symbol);
+		if (!bonuses[i]->collected) {
+			update_map(map, bonuses[i]->x, bonuses[i]->y, BONUS);
+		}
 	}
 }

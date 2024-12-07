@@ -1,130 +1,199 @@
 #include "game_save.h"
 
-void save_game_state(Car** cars,Obstacle** obstacles,Bonus** bonuses, Frog* frog, Stork* stork, Player* player, LevelConfig config) {
+void save_game_state(Car** cars, Obstacle** obstacles, Bonus** bonuses, Frog* frog, Stork* stork, Player* player, LevelConfig config) {
     char c;
     char filename[MAX_NAME];
     printf("Enter the filename (max %d characters): ", MAX_NAME);
 
-    
     for (int i = 0; i < MAX_NAME; i++) {
-        c = getch(); 
-        if (c == '\r' || c == '\n') {  
-            filename[i] = '\0';   
-            break;                 
+        c = getch();
+        if (c == '\r' || c == '\n') {
+            filename[i] = '\0';
+            break;
         }
         else {
-            filename[i] = c;      
-            putch(c);               
+            filename[i] = c;
+            putch(c);
         }
     }
     FILE* file = NULL;
-    fopen_s(&file, filename, "wb");
+    fopen_s(&file, filename, "w");
     if (!file) {
         perror("Cannot open file for writing");
         return;
     }
 
-   
-    fwrite(player, sizeof(Player), 1, file);
+    
+    fprintf(file, "Player\n");
+    fprintf(file, "%.*s %d %d\n", player->name_length, player->name, player->points, player->level);
 
-  
+
+    
     int max_cars = config.max_enemy + config.max_friend;
 
+    
+    fprintf(file, "Cars\n");
 
-    fwrite(&max_cars, sizeof(int), 1, file);
     for (int i = 0; i < max_cars; i++) {
-        fwrite(cars[i], sizeof(Car), 1, file);
+        fprintf(file, "%d %d %d %d %d %d %d %d %d %c\n",
+            cars[i]->x,
+            cars[i]->y,
+            cars[i]->street_number,
+            cars[i]->car_id,
+            cars[i]->speed,
+            cars[i]->friendly,
+            cars[i]->respawn,
+            cars[i]->direction,
+            cars[i]->stops,
+            cars[i]->symbol);
     }
 
-    fwrite(&(config.max_obstacles), sizeof(int), 1, file);
+
+    
+    fprintf(file, "Obstacles\n");
     for (int i = 0; i < config.max_obstacles; i++) {
-        fwrite(obstacles[i], sizeof(Obstacle), 1, file);
+        fprintf(file, "%d %d %d\n", obstacles[i]->x, obstacles[i]->y, obstacles[i]->obstacle_id);
     }
 
-
-    fwrite(&(config.bonuses), sizeof(int), 1, file);
+    
+    fprintf(file, "Bonuses\n");
     for (int i = 0; i < config.bonuses; i++) {
-        fwrite(bonuses[i], sizeof(Bonus), 1, file);
+        fprintf(file, "%d %d %d %d %d\n", bonuses[i]->x, bonuses[i]->y, bonuses[i]->collected,
+            bonuses[i]->disappeared, bonuses[i]->bonus_id);
     }
 
+    
+    fprintf(file, "Frog\n");
+    fprintf(file, "%d %d %d %d %c\n", frog->x, frog->y, frog->jump_distance, frog->car_index,frog->map_piece);
 
-    fwrite(frog, sizeof(Frog), 1, file);
-    fwrite(stork, sizeof(Stork), 1, file);
+    
+    fprintf(file, "Stork\n");
+    fprintf(file, "%d %d %lf %lf %d ", stork->x, stork->y, stork->speed, stork->time_spawn, stork->exists);
+    int counter=0;
+    for (int i = 0; i < STORK_SIZE; i++) {//x
+        for (int j = 0; j < STORK_SIZE; j++) {//y
+            fprintf(file, "%c", stork->map_piece[counter]);
+            counter++;
+        }
+    }
+    fprintf(file, " %lf\n", stork->gained_speed);
+
 
     fclose(file);
 
+    
     FILE* ranking_file = NULL;
     fopen_s(&ranking_file, "ranking.txt", "a");
     if (!ranking_file) {
         perror("Cannot open ranking file");
         return;
     }
-
-    // Zapisujemy nazwê gracza i jego punkty
     fprintf(ranking_file, "%s %d\n", player->name, player->points);
-
     fclose(ranking_file);
 }
+
 
 void read_game_state(Car*** cars, Obstacle*** obstacles, Bonus*** bonuses, Frog** frog, Stork** stork, Player* player, LevelConfig* config) {
     char c;
     char filename[MAX_NAME];
     printf("Enter the filename (max %d characters): ", MAX_NAME);
 
-    // Wczytujemy nazwê pliku znak po znaku
+ 
     for (int i = 0; i < MAX_NAME; i++) {
-        c = getch();  // Oczekujemy na wciœniêcie klawisza przez u¿ytkownika
-        if (c == '\r' || c == '\n') {  // Je¿eli naciœniêto Enter (powrót karetki)
-            filename[i] = '\0';    // Koñczymy ³añcuch znaków
-            break;                 // Koñczymy wczytywanie
+        c = getch(); 
+        if (c == '\r' || c == '\n') {  
+            filename[i] = '\0';   
+            break;               
         }
         else {
-            filename[i] = c;       // Zapisujemy wprowadzone znaki
-            putch(c);               // Wyœwietlamy je na ekranie
+            filename[i] = c;       
+            putch(c);               
         }
     }
 
-    
     FILE* file = NULL;
-    fopen_s(&file, filename, "rb");
+    fopen_s(&file, filename, "r");
     if (!file) {
         perror("Cannot open file for reading");
         return;
     }
 
-    fread(player, sizeof(Player), 1, file);
-    int level = player->level;
+    char section[20];
+    
 
-    manage_config(config, level);
+    
+    fscanf_s(file, "%19s", section, (unsigned)_countof(section)); 
+    fscanf_s(file, "%s %d %d", player->name, (unsigned)_countof(player->name), &player->points, &player->level);
 
+    
+    manage_config(config, player->level);
     initialize_memory(cars, obstacles, bonuses, frog, stork, *config);
+    int max_cars=config->max_enemy+config->max_friend;
 
-    int max_cars = config->max_enemy + config->max_friend;
-    fread(&max_cars, sizeof(int), 1, file);
+    
+
+    
+    fscanf_s(file, "%19s", section, (unsigned)_countof(section)); 
+
     for (int i = 0; i < max_cars; i++) {
-
-        fread((*cars)[i], sizeof(Car), 1, file);
+        fscanf_s(file, "%d %d %d %d %d %d %d %d %d %c",
+            &(*cars)[i]->x,
+            &(*cars)[i]->y,
+            &(*cars)[i]->street_number,
+            &(*cars)[i]->car_id,
+            &(*cars)[i]->speed,
+            &(*cars)[i]->friendly,
+            &(*cars)[i]->respawn,
+            &(*cars)[i]->direction,
+            &(*cars)[i]->stops,
+            &(*cars)[i]->symbol);
+        
     }
 
 
-    fread(&(config->max_obstacles), sizeof(int), 1, file);
+    
+    fscanf_s(file, "%19s", section, (unsigned)_countof(section));
     for (int i = 0; i < config->max_obstacles; i++) {
-
-        fread((*obstacles)[i], sizeof(Obstacle), 1, file);
+        fscanf_s(file, "%d %d %d", &(*obstacles)[i]->x, &(*obstacles)[i]->y, &(*obstacles)[i]->obstacle_id);
     }
 
-
-    fread(&(config->bonuses), sizeof(int), 1, file);
+   
+    fscanf_s(file, "%19s", section, (unsigned)_countof(section));
     for (int i = 0; i < config->bonuses; i++) {
-
-        fread((*bonuses)[i], sizeof(Bonus), 1, file);
+        fscanf_s(file, "%d %d %d %d %d",
+            &(*bonuses)[i]->x, &(*bonuses)[i]->y, &(*bonuses)[i]->collected,
+            &(*bonuses)[i]->disappeared, &(*bonuses)[i]->bonus_id);
     }
 
+    
+    fscanf_s(file, "%19s", section, (unsigned)_countof(section));
+    fscanf_s(file, "%d %d %d %d %*c%c", 
+        &(*frog)->x, 
+        &(*frog)->y, 
+        &(*frog)->jump_distance, 
+        &(*frog)->car_index, 
+        &(*frog)->map_piece, 0);
 
-    fread(*frog, sizeof(Frog), 1, file);
+    
+    fscanf_s(file, "%19s", section, (unsigned)_countof(section));  
 
-    fread(*stork, sizeof(Stork), 1, file);
+    fscanf_s(file, "%d %d %lf %lf %d", &(*stork)->x, &(*stork)->y, &(*stork)->speed,
+        &(*stork)->time_spawn, &(*stork)->exists);
+
+
+    int counter=3;
+    for (int i = 0; i < STORK_SIZE; i++) {//x
+        for (int j = 0; j < STORK_SIZE; j++) {//y
+            fscanf_s(file, "%c", &(*stork)->map_piece[counter]);
+            counter--;
+        }
+    }
+
+    fscanf_s(file, " %lf", &(*stork)->gained_speed);
+
+
 
     fclose(file);
 }
+
 

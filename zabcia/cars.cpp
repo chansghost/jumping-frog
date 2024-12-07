@@ -55,7 +55,6 @@ bool check_for_cars(char** map, Car** cars, int max_cars, int index) {
 void reset_car(Car* car, bool friendly,int x,int direction,int street_number,bool stops) {
     car->x = x;
     car->y = -1;
-    car->symbol = ' ';
     car->friendly = friendly;
     car->street_number = street_number;
     car->speed = 0;
@@ -63,6 +62,7 @@ void reset_car(Car* car, bool friendly,int x,int direction,int street_number,boo
     car->stops = stops;
     if (street_number == -1) {//if not used
         car->respawn = -1;
+        car->symbol = ' ';
     }
 
 }
@@ -203,7 +203,7 @@ void generate_all_cars(Car** cars, char** map, int streets[],LevelConfig config)
 void render_all_cars(char** map, Car** cars,LevelConfig config) {
     int max_cars = config.max_enemy + config.max_friend;
     for (int i = 0; i < max_cars; i++) {
-        if (cars[i]->x != -1) {//if car was generated
+        if (cars[i]->y != -1) {//if car was generated
             render_car(map, cars[i], ADD);
         }
     }
