@@ -43,7 +43,7 @@ void ranking(Player*player,double timer) {
 	}
 	y++;
 	gotoxy(x, y);
-	Name:
+	//Name: ???
 	cputs("Points: ");
 	x += 1;
 	y++;
@@ -76,11 +76,15 @@ int winning_logs(Player* player) {
 		cputs("Y-yes\n");
 		cputs("N-no\n");
 		c= getch();
-		if (c == 'y') {
-			return 1;
+		while (c != 'y' && c != 'n') {
+			if (c == 'y') {
+				return 1;
+			}
+			else if (c == 'n') {
+				return 0;
+			}
 		}
 	
-		return 0;
 	}
 	else {
 		cputs("You finished the highest level of the game. Congratulations!\n");

@@ -1,14 +1,80 @@
 #include "game_save.h"
 
 
+int compare_names(char* name1,char* name2) {
+    while (*name1 && *name2) {
+        if (*name1 != *name2) {
+            return 0; 
+        }
+        name1++;
+        name2++;
+    }
+    
+    return 1;
+}
+
+void save_player_to_ranking(Player player) {
+    FILE* file = NULL;
+    fopen_s(&file,"game_ranking.txt", "r+");
+    if (!file) {
+        fopen_s(&file,"game_ranking.txt", "w+");//utworzenie pliku jak n ma
+        if (!file) {
+            perror("Nie uda³o siê otworzyæ pliku");
+            return;
+        }
+    }
+    int num_players = 0;
+    fscanf_s(file, "%d", &num_players);
+
+    Player players[100];
+    int player_count = 0;
+    bool old_player = false;
+
+
+    for (int i = 0; i < num_players; i++) {
+        fscanf_s(file, "%d %s %d", &players[i].name_length, players[i].name, (unsigned)_countof(players[i].name), &players[i].points);
+        if (compare_names(player.name, players[i].name)) {//see if the user already played the game
+            players[i].points = player.points;
+            old_player = true;
+        }
+    }
+
+
+    if (!old_player) {
+        players[num_players] = player;
+        num_players++;
+    }
+
+    
+    if (num_players > 1) {
+        for (int i = 0; i < num_players - 1; i++) {
+            for (int j = 0; j < num_players - 1 - i; j++) {
+                if (players[j].points < players[j + 1].points) {//player sorting
+                    Player temp = players[j];
+                    players[j] = players[j + 1];
+                    players[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    freopen_s(&file,"game_ranking.txt", "w", file);//go back to the beginning of the file
+    fprintf(file, "%d\n", num_players);
+    for (int i = 0; i < num_players; i++) {
+        fprintf(file, "%d %.*s %d\n", players[i].name_length,players[i].name_length, players[i].name, players[i].points);
+    }
+
+    fclose(file);
+}
+
 void save_player(FILE* file, Player* player) {
-    fprintf(file, "Player\n");
     fprintf(file, "%.*s %d %d\n", player->name_length, player->name, player->points, player->level);
+    save_player_to_ranking(*player);
 }
 
 
+
 void save_cars(FILE* file, Car** cars, int max_cars) {
-    fprintf(file, "Cars\n");
     for (int i = 0; i < max_cars; i++) {
         fprintf(file, "%d %d %d %d %d %d %d %d %d %c\n",
             cars[i]->x,
@@ -26,7 +92,6 @@ void save_cars(FILE* file, Car** cars, int max_cars) {
 
 
 void save_obstacles(FILE* file, Obstacle** obstacles, int max_obstacles) {
-    fprintf(file, "Obstacles\n");
     for (int i = 0; i < max_obstacles; i++) {
         fprintf(file, "%d %d %d\n", obstacles[i]->x, obstacles[i]->y, obstacles[i]->obstacle_id);
     }
@@ -34,7 +99,6 @@ void save_obstacles(FILE* file, Obstacle** obstacles, int max_obstacles) {
 
 
 void save_bonuses(FILE* file, Bonus** bonuses, int max_bonuses) {
-    fprintf(file, "Bonuses\n");
     for (int i = 0; i < max_bonuses; i++) {
         fprintf(file, "%d %d %d %d %d\n", bonuses[i]->x, bonuses[i]->y, bonuses[i]->collected,
             bonuses[i]->disappeared, bonuses[i]->bonus_id);
@@ -43,13 +107,11 @@ void save_bonuses(FILE* file, Bonus** bonuses, int max_bonuses) {
 
 
 void save_frog(FILE* file, Frog* frog) {
-    fprintf(file, "Frog\n");
     fprintf(file, "%d %d %d %d %c\n", frog->x, frog->y, frog->jump_distance, frog->car_index, frog->map_piece);
 }
 
 
 void save_stork(FILE* file, Stork* stork) {
-    fprintf(file, "Stork\n");
     fprintf(file, "%d %d %lf %lf %d ", stork->x, stork->y, stork->speed, stork->time_spawn, stork->exists);
     int counter = 0;
     for (int i = 0; i < STORK_SIZE; i++) {  // x
@@ -111,15 +173,11 @@ void save_game_state(Car** cars, Obstacle** obstacles, Bonus** bonuses, Frog* fr
 
 
 void read_player(FILE* file, Player* player) {
-    char section[20];
-    fscanf_s(file, "%19s", section, (unsigned)_countof(section));
     fscanf_s(file, "%s %d %d", player->name, (unsigned)_countof(player->name), &player->points, &player->level);
 }
 
 
 void read_cars(FILE* file, Car*** cars, int max_cars) {
-    char section[20];
-    fscanf_s(file, "%19s", section, (unsigned)_countof(section));
 
     for (int i = 0; i < max_cars; i++) {
         fscanf_s(file, "%d %d %d %d %d %d %d %d %d %c",
@@ -138,8 +196,6 @@ void read_cars(FILE* file, Car*** cars, int max_cars) {
 
 
 void read_obstacles(FILE* file, Obstacle*** obstacles, int max_obstacles) {
-    char section[20];
-    fscanf_s(file, "%19s", section, (unsigned)_countof(section));
 
     for (int i = 0; i < max_obstacles; i++) {
         fscanf_s(file, "%d %d %d", &(*obstacles)[i]->x, &(*obstacles)[i]->y, &(*obstacles)[i]->obstacle_id);
@@ -148,8 +204,6 @@ void read_obstacles(FILE* file, Obstacle*** obstacles, int max_obstacles) {
 
 
 void read_bonuses(FILE* file, Bonus*** bonuses, int max_bonuses) {
-    char section[20];
-    fscanf_s(file, "%19s", section, (unsigned)_countof(section));
 
     for (int i = 0; i < max_bonuses; i++) {
         fscanf_s(file, "%d %d %d %d %d",
@@ -160,8 +214,6 @@ void read_bonuses(FILE* file, Bonus*** bonuses, int max_bonuses) {
 
 
 void read_frog(FILE* file, Frog** frog) {
-    char section[20];
-    fscanf_s(file, "%19s", section, (unsigned)_countof(section));
 
     fscanf_s(file, "%d %d %d %d %*c%c",
         &(*frog)->x,
@@ -173,8 +225,6 @@ void read_frog(FILE* file, Frog** frog) {
 
 
 void read_stork(FILE* file, Stork** stork) {
-    char section[20];
-    fscanf_s(file, "%19s", section, (unsigned)_countof(section));
 
     fscanf_s(file, "%d %d %lf %lf %d", &(*stork)->x, &(*stork)->y, &(*stork)->speed,
         &(*stork)->time_spawn, &(*stork)->exists);
@@ -216,7 +266,7 @@ void read_game_state(Car*** cars, Obstacle*** obstacles, Bonus*** bonuses, Frog*
         return;
     }
 
-    char section[20];
+    
     
 
     
