@@ -1,6 +1,49 @@
 #include "game_save.h"
 
 
+void show_ranking() {
+    
+    clrscr();
+    int x = MAP_WIDTH / 2;
+    int y = MAP_HEIGHT / 2;
+    gotoxy(x, y);
+    y += 1;
+    printf("Game ranking:\n");
+    FILE* file = NULL;
+    fopen_s(&file, "game_ranking.txt", "r");
+    if (!file) {
+        printf("cant open file");
+        return;
+    }
+    int num_players=0;
+    fscanf_s(file, "%d", &num_players);  
+
+   
+    Player** players = (Player**)malloc(num_players * sizeof(Player*));
+    for (int i = 0; i < num_players; i++) {
+        players[i] = (Player*)malloc(sizeof(Player));
+    }
+
+    for (int i = 0; i < num_players; i++) {
+        fscanf_s(file, "%d %s %d", &players[i]->name_length, players[i]->name, (unsigned)_countof(players[i]->name), &players[i]->points);
+    }
+
+  
+    for (int i = 0; i < num_players; i++) {
+        gotoxy(x, y + i);
+        printf("%s %d\n", players[i]->name, players[i]->points);
+    }
+
+    
+    for (int i = 0; i < num_players; i++) {
+        free(players[i]);
+    }
+    free(players); 
+
+    fclose(file);  
+}
+
+
 int compare_names(char* name1,char* name2) {
     while (*name1 && *name2) {
         if (*name1 != *name2) {

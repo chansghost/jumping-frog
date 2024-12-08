@@ -256,36 +256,53 @@ void jump(char** map, Frog* frog, int direction, Car** cars, int max_cars,int ma
 }
 
 int chooseLevel() {
-    clrscr();
-    cputs("Choose game level:\n");
-    textbackground(RED);
-    putch('0');
-    cputs("\n");
-    putch('1');
-    cputs("\n");
-    putch('2');
-    cputs("\n");
-    putch('3');
-    textbackground(BLACK);
     int key;
-    key = getch();
+    int x = MAP_WIDTH / 2;
+    int y = MAP_HEIGHT / 2;
+    int newy = y;
+    while (true) {
+        clrscr(); 
+        gotoxy(x, y);
+        newy = y;
+        cputs("Choose game level:\n");
+        newy += 2;
+        textbackground(RED);
+        for (int i = 0; i < 4; i++) {
+            gotoxy(x, newy + i);
+            putch('0' + i);
 
-    switch (key)
-    {
-    case '0':
-        clrscr();
-        return 0;
-    case '1':
-        clrscr();
-        return 1;
-    case '2':
-        clrscr();
-        return 2;
-    case '3':
-        clrscr();
-        return 3;
+        }/*
+        putch('0');
+        cputs("\n");
+        putch('1');
+        cputs("\n");
+        putch('2');
+        cputs("\n");
+        putch('3');*/
+        textbackground(BLACK);
+
+        key = getch(); 
+
+        switch (key) {
+        case '0':
+            clrscr();
+            return 0;
+        case '1':
+            clrscr();
+            return 1;
+        case '2':
+            clrscr();
+            return 2;
+        case '3':
+            clrscr();
+            return 3;
+        default:
+            cputs("\nInvalid selection. Please choose a valid level (0-3).\n");
+            break;
+        }
     }
 }
+
 
 
 
@@ -418,6 +435,7 @@ void gameplay(char** map, char** pastmap, int max_cars,Car** cars, Frog* frog, i
         print_map(map, pastmap);
         
     }
+    
 }
 
 void game(char** map,char**basemap, char** pastmap, Car** cars, LevelConfig config, Frog* frog,Obstacle**obstacles,Bonus**bonuses,Player*player, Stork* stork) {
@@ -440,16 +458,30 @@ void game(char** map,char**basemap, char** pastmap, Car** cars, LevelConfig conf
 }
 
 bool check_if_new() {
-    printf("Do you want to load a saved game?\n");
-    printf("Y-yes\n");
-    printf("N-no\n");
     char c;
-    c = getch();
-    if (c == 'y') {
-        return true;
-    }
-    return false;
+    int x = MAP_WIDTH / 2;
+    int y = MAP_HEIGHT / 2;
+    while (true) {
+        gotoxy(x, y);
+        clrscr();
+        printf("Do you want to load a saved game?\n");
+        gotoxy(x, y+1);
+        printf("Y - yes\n");
+        gotoxy(x, y+2);
+        printf("N - no\n");
 
+        c = getch();
+
+        switch (c) {
+        case 'y':
+            return true;
+        case 'n':
+            return false;
+        default:
+            printf("\nInvalid input. Please enter 'Y' or 'N'.\n");
+            break;
+        }
+    }
 }
 
 
@@ -520,6 +552,7 @@ void start() {
     if (player->won) {
         next_level(map, pastmap, basemap, cars, frog, bonuses, obstacles, player, stork, config);
     }
-        
+    save_player_to_ranking(*player);
+    show_ranking();
     
 }

@@ -36,12 +36,7 @@ void ranking(Player*player,double timer) {
 	
 	gotoxy(x, y);
 	y++;
-	cputs(" Ranking:\n");
-	for (int i = 0; i < player->name_length; i++) {
-		gotoxy(x+i, y);
-		putch(player->name[i]);
-	}
-	y++;
+	
 	gotoxy(x, y);
 	//Name: ???
 	cputs("Points: ");
@@ -72,16 +67,20 @@ int winning_logs(Player* player) {
 	cputs("You won\n");
 	if (player->level < 3) {
 		char c;
-		cputs("Do you wish to go to the next level?\n");
-		cputs("Y-yes\n");
-		cputs("N-no\n");
-		c= getch();
-		while (c != 'y' && c != 'n') {
-			if (c == 'y') {
-				return 1;
-			}
-			else if (c == 'n') {
-				return 0;
+		while (true) {
+			cputs("Do you wish to go to the next level?\n");
+			cputs("Y-yes\n");
+			cputs("N-no\n");
+			c = getch(); 
+
+			switch (c) {
+			case 'y':
+				return true;
+			case 'n':
+				return false;
+			default:
+				printf("\nInvalid input. Please enter 'Y' or 'N'.\n");
+				break;
 			}
 		}
 	

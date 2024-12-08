@@ -14,6 +14,7 @@
 
 void save_player_to_ranking(Player player);
 int compare_names(char* name1, char* name2);
+void show_ranking();
 
 void save_player(FILE* file, Player* player);
 void save_cars(FILE* file, Car** cars, int max_cars);

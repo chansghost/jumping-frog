@@ -1,5 +1,5 @@
 level 0
-max_friend 4
+max_friend 10
 max_enemy 5
 minimum_cars 3
 max_speed 2

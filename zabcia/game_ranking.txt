@@ -1,4 +1,5 @@
-3
-4 tata 3
-4 kami 3
-5 julaa 0
+4
+5 test2 6
+5 test1 2
+5 test4 1
+5 test3 0
